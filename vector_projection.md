@@ -82,6 +82,5 @@ $\vec{v}$.
 
 ## Also see
 
-* [wikipedia on \vector
-  projection](https://lisds.github.io/dsip/algebra_of_sums.html)
+* [Algebra of sums](algebra_of_sums)
 * [On vectors](on_vectors)

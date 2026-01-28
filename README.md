@@ -13,19 +13,19 @@ thanks to the authors.
 Say your Github username is `my-gh-user`.
 
 Go to the repository page that houses this README - for example
-<https://github.co/lisds/dsip>.
+<https://github.co/odsti/dsip>.
 
 Click on "Fork" button near top right, to make your own fork of the
 repository, that will now be at `https://github.com/my-gh-user/<repo-name>` where `<repo-name>` is the name of the repository housing this README.
 
-The following assumes that the README is in <https://github.com/lisds/dsip>.
+The following assumes that the README is in <https://github.com/odsti/dsip>.
 The name of the repository is therefore `dsip`.  Substitute URL and
 repository name throughout.
 
 Clone the main repo:
 
 ```
-git clone https://github.com/lisds/dsip
+git clone https://github.com/odsti/dsip
 ```
 
 Add a remote for your fork:

@@ -164,7 +164,7 @@ We didn't use "Manchester United" with `dict` because it would have failed with 
 bad_dict = dict(Manchester United=212_135_000)
 ```
 
-What happened there?   Keyword arguments to functions have to be [valid variable names](https://lisds.github.io/textbook/code-basics/Names.html) in Python, because, in general, they do become variables inside the function.   For example, here's a function with a keyword argument (`my_var=10`):
+What happened there?   Keyword arguments to functions have to be [valid variable names](https://odsti.github.io/cfd-textbook/Names.html) in Python, because, in general, they do become variables inside the function.   For example, here's a function with a keyword argument (`my_var=10`):
 
 ```{python}
 def my_func(a, my_var=10):  # Notice the my_var=10 keyword argument.
@@ -335,7 +335,7 @@ Here's the last `pair`, left from the execution of the loop above:
 pair
 ```
 
-We may want to put the key and the value into their own variables, rather than keeping them together in a tuple like this.  This is a job for [unpacking](https://lisds.github.io/textbook/mean-slopes/using_minimize#unpacking).  Unpacking occurs when you have a sequence on the right hand side of an expression, and multiple values on the left.  Here we unpack the pair into two variables, `key` and `value`:
+We may want to put the key and the value into their own variables, rather than keeping them together in a tuple like this.  This is a job for [unpacking](https://odsti.github.io/cfd-textbook/using_minimize#unpacking).  Unpacking occurs when you have a sequence on the right hand side of an expression, and multiple values on the left.  Here we unpack the pair into two variables, `key` and `value`:
 
 ```{python}
 # Unpacking.

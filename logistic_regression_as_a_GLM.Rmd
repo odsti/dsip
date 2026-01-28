@@ -214,7 +214,9 @@ From the graphical trend, it does look as though `fare` is associated with a hig
 
 In fact, in this sample of 25 passengers, everybody who paid above 60 survived.
 
-You'll remember from the earlier [Logistic Regression page](https://lisds.github.io/textbook/more-regression/logistic_regression.html) that the process of fitting a single predictor logistic regression goes as follows:
+You'll remember from the earlier [Logistic Regression
+page](https://odsti.github.io/cfd-textbook/logistic_regression.html) that the
+process of fitting a single predictor logistic regression goes as follows:
 
 - we want to predict a binary categorical outcome variable (where each outcome category is dummy coded as 0 or 1)
 - we use a slope/intercept pair to generate a line (this line applies on the scale of the log of the odds)
@@ -459,7 +461,7 @@ plt.title('Predicted Probability of Survival');
 **It is on this scale (between 0 and 1, the scale of the actual data) that the fit of
 a given slope/intercept pair is evaluated.**
 
-We went through the mechanics of this on the [Logistic Regression page](https://lisds.github.io/textbook/more-regression/logistic_regression.html), but just for some
+We went through the mechanics of this on the [Logistic Regression page](https://odsti.github.io/cfd-textbook/logistic_regression.html), but just for some
 extra clarity we will go briefly through it graphically now.
 
 Because the outcome is binary, the logistic regression model implicitly fits *two* sigmoid probability curves.
