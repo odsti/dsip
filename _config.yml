@@ -23,6 +23,7 @@ exclude_patterns:
   - images/LICENSE.md
   - data/README.md
   - .pytest_cache/*
+  - interactive-notebooks/
 
 html:
   favicon: images/dsfe_favicon.ico

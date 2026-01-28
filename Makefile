@@ -2,8 +2,9 @@ BUILD_DIR=_build/html
 
 html:
 	# Check for ipynb files in source (should all be .Rmd).
-	if compgen -G "*/*.ipynb" 2> /dev/null; then (echo "ipynb files" && exit 1); fi
+	if compgen -G "*.ipynb" 2> /dev/null; then (echo "ipynb files" && exit 1); fi
 	jupyter-book build -W .
+	cp -r interactive-notebooks $(BUILD_DIR)
 
 github: html
 	ghp-import -n _build/html -p -f
