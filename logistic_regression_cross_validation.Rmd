@@ -144,7 +144,8 @@ We'll dummy code these in the now familiar manner, 1 representing `yes` and 0 re
 
 ```{python}
 # dummy code 'survived'
-full_df['survived_dummy'] = full_df['survived'].replace(['yes', 'no'], [1, 0])
+full_df['survived_dummy'] = (full_df['survived'].replace(['yes', 'no'], [1, 0])
+                             .astype(int))
 full_df
 ```
 
@@ -180,26 +181,21 @@ As always, it's best to do some graphical analysis first, before fitting the mod
 ```{python}
 # a convenience function to generate the scatterplot
 def plot_scatter(log_odds=False):
+    colors = sample_df['survived_dummy'].replace([1, 0], ['red', 'blue'])
+    # Build plot, add custom labels.
     if log_odds==False:
-        # Build plot, add custom labels.
-        colors = sample_df['survived_dummy'].replace([1, 0], ['red', 'blue'])
         sample_df.plot.scatter('fare', 'survived_dummy', c=colors)
         plt.ylabel('Survived\n0 = NO, 1 = YES')
         plt.yticks([0,1]);  # Just label 0 and 1 on the y axis.
-        # Put a custom legend on the plot. 
-        plt.scatter([], [], c='blue', label='NO')
-        plt.scatter([], [], c='red', label='YES')
-        plt.legend()
     if log_odds==True:
-        # Build plot, add custom labels.
-        colors = sample_df['survived_dummy'].replace([1, 0], ['red', 'blue'])
         pd.DataFrame({'fare':fare,
                      'log_odds_of_survival': log_odds_predictions_single_predictor}).plot.scatter('fare', 'log_odds_of_survival', c=colors)
         plt.ylabel('Predicted Log odds of Survival')
-        # Put a custom legend on the plot.  This code is a little obscure.
-        plt.scatter([], [], c='blue', label='NO')
-        plt.scatter([], [], c='red', label='YES')
-        plt.legend()
+    # Put a custom legend on the plot. This code is a little obscure.
+    plt.scatter([], [], c='blue', label='NO')
+    plt.scatter([], [], c='red', label='YES')
+    plt.legend()
+
 plot_scatter()
 ```
 
@@ -1004,7 +1000,8 @@ Let's set up a loop to compare the accuracy of various models:
 ```{python}
 # add a dummy for gender
 df = sample_df
-df['gender_dummy'] = df['gender'].replace(['male', 'female'], [0, 1])
+df['gender_dummy'] = (df['gender'].replace(['male', 'female'], [0, 1])
+                      .astype(int))
 
 # different combinations of predictors
 model_1_predictors = ['fare']
