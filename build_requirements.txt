@@ -3,7 +3,7 @@
 # https://github.com/ProjectPythia/radar-cookbook/pull/84/files
 # format-nongpl error for older jsonschema
 jupyter_server<2
-jupyter-book
+jupyter-book<2
 oktools
 git+https://github.com/pxr687/jupyprint.git
 # To allow static build / upload
