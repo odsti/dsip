@@ -28,6 +28,15 @@ classifiers](https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bay
 in the [Python Data Science
 Handbook](https://jakevdp.github.io/PythonDataScienceHandbook).
 
+Naïve Bayes is a classification technique that relies on some simple Bayesian
+reasoning.
+
+Follow along to see how this classification method works, and the sense in
+which this method is "naïve".
+
+First we load up the classification problem, which is to predict the species of
+penguin from a couple of measurements — body mass, and bill depth.
+
 ```{python}
 import seaborn as sns
 ```
@@ -67,7 +76,7 @@ fig, axes = plt.subplots(1, 2)
 axes[0].hist(bm_by_species.get_group('Chinstrap'))
 axes[0].set_title('Chinstrap')
 axes[1].hist(bm_by_species.get_group('Gentoo'));
-axes[1].set_title('Gentoo')
+axes[1].set_title('Gentoo');
 ```
 
 ## Enumerate
@@ -107,8 +116,8 @@ for i, name in enumerate(species_names):
 
 We are going to start to think about getting the probability of a particular
 *mass* given we have a Chinstrap or a Gentoo penguin.  We might like to start
-with density histograms.  Here was ask Matplotlib to set the area of the bars
-to sum to 1.
+with density histograms.  Here we ask Matplotlib to set the area of the bars to
+sum to 1.
 
 ```{python}
 fig, axes = plt.subplots(1, 2)
@@ -435,15 +444,21 @@ sns.scatterplot(df, x='body_mass_g', y='bill_depth_mm',
 ```
 
 Question - is the bill depth *independent* (in the sense of probability) from
-the body mass?   That is - if I know the body mass, do I know anything more
-about the bill depth?
+the body mass?   If the bill depth and the body mass are *not independent*,
+then if I know the bill depth, I can get a better estimate of the body mass. If
+they are *independent*, then knowing the bill depth gives me no more
+information with which to estimate the body mass.
 
 
-For the moment - let's say "yes" (it's independent).  That's *naïve*.  And
-that's where "naïve" Bayes reaches the name of the technique.
+For the moment - let's say "yes" - body mass and bill depth are independent.
+That's *naïve* in general, and obviously so in our case, as you can see on the
+plot that the bill depth and body mass are somewhat related.  It would be naïve
+to assume they were independent.  And making that assumption gives us the
+"naïve" in "naïve Bayes".
 
 
-Using independence, we can calculate the probability of a *combination* of a particular body mass and bill depth value.
+Using independence, we can calculate the probability of a *combination* of
+a particular body mass and bill depth value.
 
 Call $P(d)$ the probability of a particular bill depth value.  Naïve Bayes
 estimates the probability of the combination with:
