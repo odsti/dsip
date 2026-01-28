@@ -1,3 +1,4 @@
 [codespell]
 skip = .git,*.pdf,*.svg,*.csv
 ignore-words-list = trough,remainers,hove
+ignore-regex = [A-Za-z0-9+/]{100,}
