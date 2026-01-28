@@ -1,0 +1,1100 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Using the pathlib module &#8212; Data Science in Practice</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pathlib';</script>
+    <link rel="canonical" href="https://lisds.github.io/dsip/pathlib.html" />
+    <link rel="icon" href="_static/dsfe_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dictionaries" href="dictionaries.html" />
+    <link rel="prev" title="2D arrays, images, optimization" href="image_for_optimize.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/dsfe_logo.png" class="logo__image only-light" alt="Data Science in Practice - Home"/>
+    <script>document.write(`<img src="_static/dsfe_logo.png" class="logo__image only-dark" alt="Data Science in Practice - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Coding background</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="assert.html">Using <code class="docutils literal notranslate"><span class="pre">assert</span></code> for testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arrays_and_images.html">Arrays as images, images as arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_and_argmin.html">Where and argmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_2d.html">Where in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_for_optimize.html">2D arrays, images, optimization</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Using the <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dictionaries.html">Dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pandas_and_dicts.html">Pandas and dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lambda_functions.html">Lambda functions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reading formulae</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="on_vectors.html">Vectors and dot products</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_vectors.html">Numpy, arrays, and vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algebra_of_sums.html">Some algebra with summation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_notation.html">Notation for linear regression models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector_projection.html">Vector projection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_introduction.html">Introducing principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_dimension_reduction.html">Dimension reduction with Principal Component Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intermediate regression</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_multiple_predictors.html">Linear regression notation for models with multiple predictors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epl_modeling.html">Attack or defense?  An example of multiple regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression_categorical_predictors.html">Categorical predictors in linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple_predictors_statistical_adjustment.html">Statistical Adjustment in Multi-predictor Linear Regression Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logistic_regression_cross_validation.html">Multiple Logistic Regression, Model Selection and Cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cost_functions.html">Fitting models with different cost functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_notation.html">Expressing the linear model with matrices</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Classification</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="naive_bayes.html">Naive Bayes classifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k_means.html">k-means clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Working with data</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="data_work.html">The problem with data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing on your computer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the-problem-with-notebooks.html">The joys and sorrows of notebooks</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/lisds/dsip/main?urlpath=lab/tree/pathlib.Rmd" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://ds.lis.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A//github.com/lisds/dsip&urlpath=lab/tree/dsip/pathlib.Rmd&branch=main" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on JupyterHub"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="JupyterHub logo" src="_static/images/logo_jupyterhub.svg">
+  </span>
+<span class="btn__text-container">JupyterHub</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/edit/main/pathlib.Rmd" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/issues/new?title=Issue%20on%20page%20%2Fpathlib.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/pathlib.Rmd" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.Rmd</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Using the pathlib module</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#listing-files-in-a-directory">Listing files in a directory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-files-with-glob">Selecting files with <code class="docutils literal notranslate"><span class="pre">glob</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-around-the-output-of-glob"><code class="docutils literal notranslate"><span class="pre">list</span></code> around the output of <code class="docutils literal notranslate"><span class="pre">glob</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deleting-files">Deleting files</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="using-the-pathlib-module">
+<h1>Using the <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> module<a class="headerlink" href="#using-the-pathlib-module" title="Link to this heading">#</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> module is one of two ways of manipulating and using file paths in
+Python.  See the <a class="reference internal" href="path_manipulation.html"><span class="std std-doc">path manipulation</span></a> page for more
+discussion, and <a class="reference internal" href="os_path.html"><span class="std std-doc">os.path</span></a> page for a tutorial on an alternative
+approach.</p>
+<p>The primary documentation for <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> is
+<a class="reference external" href="https://docs.python.org/3/library/pathlib.html">https://docs.python.org/3/library/pathlib.html</a>.</p>
+<p>The standard way to use the Pathlib module is to import the <code class="docutils literal notranslate"><span class="pre">Path</span></code> class from the module:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Path class from pathlib library.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In Jupyter or IPython, you can tab complete on <code class="docutils literal notranslate"><span class="pre">Path</span></code> to list the methods (functions) and attributes attached to it.</p>
+<p>An object (value) of type <code class="docutils literal notranslate"><span class="pre">Path</span></code> represents a pathname.  As you <a class="reference internal" href="path_manipulation.html"><span class="std std-doc">remember
+</span></a>, a pathname is a string that identifies a
+particular file or directory on a computer filesystem.</p>
+<p>Let us start by making a default object from the <code class="docutils literal notranslate"><span class="pre">Path</span></code> class, like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span>
+<span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;.&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>By default, the path object, here <code class="docutils literal notranslate"><span class="pre">p</span></code>, refers to our current working directory, or <code class="docutils literal notranslate"><span class="pre">.</span></code> for short.   <code class="docutils literal notranslate"><span class="pre">.</span></code> is a <em>relative path</em>, meaning that we specify where we are relative to our current directory.  <code class="docutils literal notranslate"><span class="pre">.</span></code> means we are exactly in our current directory.</p>
+<p>Because the <code class="docutils literal notranslate"><span class="pre">.</span></code> is a <em>relative path</em>, it does not tell us where we are in
+the filesystem, only where we are relative to the current directory.</p>
+<p>Path objects have an <code class="docutils literal notranslate"><span class="pre">absolute</span></code> function attached to them.  Another way of
+saying this is that Path objects have an <code class="docutils literal notranslate"><span class="pre">absolute</span></code> <em>method</em>.  Calling
+this method gives us the <em>absolute</em> location of the path, meaning, the
+filesystem position relative to the base location of the disk the file is
+on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">abs_p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+<span class="n">abs_p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;/home/runner/work/dsip/dsip&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice the <code class="docutils literal notranslate"><span class="pre">/</span></code> in front of the absolute filename (on Unix), meaning the
+base location for all files.  You will see a drive location like <code class="docutils literal notranslate"><span class="pre">C:</span></code> or
+similar, at the front of the absolute path, if you are on Windows.</p>
+<p>We can always convert the <code class="docutils literal notranslate"><span class="pre">Path</span></code> object to a simple string, using the
+<code class="docutils literal notranslate"><span class="pre">str</span></code> function. <code class="docutils literal notranslate"><span class="pre">str()</span></code> converts anything to a string, if it can:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The path, as a string</span>
+<span class="nb">str</span><span class="p">(</span><span class="n">abs_p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;/home/runner/work/dsip/dsip&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Sometimes we want to get a path referring the directory <em>containing</em> a path.
+The Path object has a <code class="docutils literal notranslate"><span class="pre">parent</span></code> attribute attached to it (an attribute is data
+attached to an object).  The <code class="docutils literal notranslate"><span class="pre">parent</span></code> attribute is a Path object for the
+containing directory:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">abs_p</span><span class="o">.</span><span class="n">parent</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;/home/runner/work/dsip&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">parent</span></code> attribute of the Path object gives the directory name from a
+full file path. It works correctly for Unix paths on Unix machines, and
+Windows paths on Windows machines.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Unix</span>
+<span class="n">a_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/a/full/path/then_filename.txt&#39;</span><span class="p">)</span>
+<span class="c1"># Show the directory containing the file.</span>
+<span class="n">a_path</span><span class="o">.</span><span class="n">parent</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;/a/full/path&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">parent</span></code> also works for relative paths.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Unix</span>
+<span class="n">rel_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;relative/path/then_filename.txt&#39;</span><span class="p">)</span>
+<span class="n">rel_path</span><span class="o">.</span><span class="n">parent</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;relative/path&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">name</span></code> attribute of the Path object to get the filename rather
+than the directory name:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Unix</span>
+<span class="n">rel_path</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;then_filename.txt&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Sometimes you want to join one or more directory names with a filename to get a
+path.  Path objects have a clever way of doing this, by <em>overriding</em> the <code class="docutils literal notranslate"><span class="pre">/</span></code>
+(division) operator.</p>
+<p>To remind you about operator overloading, remember that addition means different things for numbers and strings.  For numbers, addition means arithmetic addition:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Addition for numbers</span>
+<span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4
+</pre></div>
+</div>
+</div>
+</div>
+<p>For strings, addition means concatenation — sticking the strings together:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Addition for strings.</span>
+<span class="s2">&quot;first&quot;</span> <span class="o">+</span> <span class="s2">&quot;second&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;firstsecond&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Path objects use the division operator <code class="docutils literal notranslate"><span class="pre">/</span></code> to mean “stick the path fragments
+together to make a new path, where the <code class="docutils literal notranslate"><span class="pre">/</span></code> separates directories”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Unix</span>
+<span class="n">Path</span><span class="p">(</span><span class="s1">&#39;relative&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="s1">&#39;path&#39;</span> <span class="o">/</span> <span class="s1">&#39;then_filename.txt&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;relative/path/then_filename.txt&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>This also works on Windows and Unix in the same way.</p>
+<p>Sometimes you want to get the filename extension.  Use the <code class="docutils literal notranslate"><span class="pre">suffix</span></code> attribute for this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rel_path</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;relative/path/then_filename.txt&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rel_path</span><span class="o">.</span><span class="n">suffix</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;.txt&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>You will often find yourself wanting to replace the file extension.  You can do this with the <code class="docutils literal notranslate"><span class="pre">with_suffix</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rel_path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.md&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;relative/path/then_filename.md&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Path objects also have methods that allow you to read and write text characters and raw bytes.</p>
+<p>Let us make a new path to point to a file we will write in the current directory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;a_test_file.txt&#39;</span>
+<span class="n">new_path</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PosixPath(&#39;a_test_file.txt&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can write text characters (strings) to this file, with the <code class="docutils literal notranslate"><span class="pre">write_text</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_multiline_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Some text.</span>
+<span class="s2">More text.</span>
+<span class="s2">Last text.&quot;&quot;&quot;</span>
+<span class="n">new_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">a_multiline_string</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can read the text out of a file using <code class="docutils literal notranslate"><span class="pre">read_text</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Some text.\nMore text.\nLast text.&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Similarly, we can write and read raw byte data, using <code class="docutils literal notranslate"><span class="pre">write_bytes</span></code> and <code class="docutils literal notranslate"><span class="pre">read_bytes</span></code>.</p>
+<p>It is often useful to read in a text file, and split the result into lines.  We
+do this with <code class="docutils literal notranslate"><span class="pre">read_text</span></code>, and then we use the <code class="docutils literal notranslate"><span class="pre">splitlines</span></code> method of string
+object to split the read text into lines.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="n">new_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+<span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Some text.&#39;, &#39;More text.&#39;, &#39;Last text.&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<section id="listing-files-in-a-directory">
+<h2>Listing files in a directory<a class="headerlink" href="#listing-files-in-a-directory" title="Link to this heading">#</a></h2>
+<p>We can use the <code class="docutils literal notranslate"><span class="pre">glob</span></code> method of the <code class="docutils literal notranslate"><span class="pre">Path</span></code> object to give a list of all, or
+some files in a directory.</p>
+<p>For example, to see all files in the current directory, we could do this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">cwd</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[PosixPath(&#39;_notes&#39;),
+ PosixPath(&#39;a_test_file.txt&#39;),
+ PosixPath(&#39;requirements.txt&#39;),
+ PosixPath(&#39;data_work.md&#39;),
+ PosixPath(&#39;algebra_of_sums.md&#39;),
+ PosixPath(&#39;.git&#39;),
+ PosixPath(&#39;k_means.Rmd&#39;),
+ PosixPath(&#39;jupytext.toml&#39;),
+ PosixPath(&#39;.codespellrc&#39;),
+ PosixPath(&#39;_build&#39;),
+ PosixPath(&#39;check_install.py&#39;),
+ PosixPath(&#39;vector_projection.md&#39;),
+ PosixPath(&#39;linear_regression_categorical_predictors.md&#39;),
+ PosixPath(&#39;arrays_and_images.Rmd&#39;),
+ PosixPath(&#39;.github&#39;),
+ PosixPath(&#39;os_path.Rmd&#39;),
+ PosixPath(&#39;multiple_predictors_statistical_adjustment.md&#39;),
+ PosixPath(&#39;epl_modeling.Rmd&#39;),
+ PosixPath(&#39;truthiness.Rmd&#39;),
+ PosixPath(&#39;license.md&#39;),
+ PosixPath(&#39;cost_functions.Rmd&#39;),
+ PosixPath(&#39;where_and_argmin.Rmd&#39;),
+ PosixPath(&#39;where_2d.Rmd&#39;),
+ PosixPath(&#39;pandas_and_dicts.Rmd&#39;),
+ PosixPath(&#39;configure_shell.py&#39;),
+ PosixPath(&#39;images&#39;),
+ PosixPath(&#39;.gitignore&#39;),
+ PosixPath(&#39;README.md&#39;),
+ PosixPath(&#39;build_requirements.txt&#39;),
+ PosixPath(&#39;logistic_regression_exercise.md&#39;),
+ PosixPath(&#39;installation.md&#39;),
+ PosixPath(&#39;installation_on_mac.md&#39;),
+ PosixPath(&#39;image_for_optimize.Rmd&#39;),
+ PosixPath(&#39;pathlib.Rmd&#39;),
+ PosixPath(&#39;pca_introduction.Rmd&#39;),
+ PosixPath(&#39;data&#39;),
+ PosixPath(&#39;assert.Rmd&#39;),
+ PosixPath(&#39;path_manipulation.Rmd&#39;),
+ PosixPath(&#39;_course.yml&#39;),
+ PosixPath(&#39;pca_dimension_reduction.Rmd&#39;),
+ PosixPath(&#39;logistic_regression_cross_validation.Rmd&#39;),
+ PosixPath(&#39;weighted_least_squares.Rmd&#39;),
+ PosixPath(&#39;installation_on_windows.md&#39;),
+ PosixPath(&#39;choosing_editor.md&#39;),
+ PosixPath(&#39;the-problem-with-notebooks.Rmd&#39;),
+ PosixPath(&#39;lambda_functions.Rmd&#39;),
+ PosixPath(&#39;time_frequency.Rmd&#39;),
+ PosixPath(&#39;kernel_density_estimation.Rmd&#39;),
+ PosixPath(&#39;classes_inheritance.Rmd&#39;),
+ PosixPath(&#39;naive_bayes.Rmd&#39;),
+ PosixPath(&#39;lin_regression_multiple_predictors.md&#39;),
+ PosixPath(&#39;logistic_regression_as_a_GLM.Rmd&#39;),
+ PosixPath(&#39;installation_on_linux.md&#39;),
+ PosixPath(&#39;matrix_notation.Rmd&#39;),
+ PosixPath(&#39;bib&#39;),
+ PosixPath(&#39;_config.yml&#39;),
+ PosixPath(&#39;dictionaries.Rmd&#39;),
+ PosixPath(&#39;intro.md&#39;),
+ PosixPath(&#39;_toc.yml&#39;),
+ PosixPath(&#39;on_vectors.md&#39;),
+ PosixPath(&#39;Makefile&#39;),
+ PosixPath(&#39;lin_regression_notation.md&#39;),
+ PosixPath(&#39;numpy_and_vectors.Rmd&#39;),
+ PosixPath(&#39;logistic_regression.Rmd&#39;),
+ PosixPath(&#39;mutable.Rmd&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice two things here.</p>
+<section id="selecting-files-with-glob">
+<h3>Selecting files with <code class="docutils literal notranslate"><span class="pre">glob</span></code><a class="headerlink" href="#selecting-files-with-glob" title="Link to this heading">#</a></h3>
+<p>The argument to the <code class="docutils literal notranslate"><span class="pre">glob</span></code> method above is <code class="docutils literal notranslate"><span class="pre">'*'</span></code>.  The <code class="docutils literal notranslate"><span class="pre">'*'</span></code> tells <code class="docutils literal notranslate"><span class="pre">glob</span></code> to
+get <em>all</em> files and directories, using what is called a <a class="reference external" href="https://docs.python.org/3/library/glob.html">Glob
+match</a>.  This is a powerful
+feature that allows you to be selective in asking for the files that <code class="docutils literal notranslate"><span class="pre">glob</span></code>
+returns.  For example, if you wanted to see only the files ending with <code class="docutils literal notranslate"><span class="pre">.txt</span></code>
+you could do:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">cwd</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.txt&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[PosixPath(&#39;a_test_file.txt&#39;),
+ PosixPath(&#39;requirements.txt&#39;),
+ PosixPath(&#39;build_requirements.txt&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>There are more detail in the page linked above.</p>
+</section>
+<section id="list-around-the-output-of-glob">
+<h3><code class="docutils literal notranslate"><span class="pre">list</span></code> around the output of <code class="docutils literal notranslate"><span class="pre">glob</span></code><a class="headerlink" href="#list-around-the-output-of-glob" title="Link to this heading">#</a></h3>
+<p>Notice that we used <code class="docutils literal notranslate"><span class="pre">list</span></code> around the output of <code class="docutils literal notranslate"><span class="pre">glob</span></code>, as in, for example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># List all txt files.</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">cwd</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.txt&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[PosixPath(&#39;a_test_file.txt&#39;),
+ PosixPath(&#39;requirements.txt&#39;),
+ PosixPath(&#39;build_requirements.txt&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is because <code class="docutils literal notranslate"><span class="pre">glob</span></code> returns something called a <em>generator</em> which <em>can</em>
+return all the Path objects, but will not do that until we ask it to.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cwd</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.txt&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;generator object Path.glob at 0x7fe3b894d580&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">list</span></code> call converts the result into a list, and in doing so, asks the
+generator to return all the Path objects:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">cwd</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.txt&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[PosixPath(&#39;a_test_file.txt&#39;),
+ PosixPath(&#39;requirements.txt&#39;),
+ PosixPath(&#39;build_requirements.txt&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="deleting-files">
+<h2>Deleting files<a class="headerlink" href="#deleting-files" title="Link to this heading">#</a></h2>
+<p>And finally, to be tidy, we use the <code class="docutils literal notranslate"><span class="pre">unlink</span></code> method to delete the temporary
+file we were using. <code class="docutils literal notranslate"><span class="pre">unlink</span></code> is <a class="reference external" href="https://linux.die.net/man/2/unlink">strangely
+named</a>, where the name refers to the way
+the computer disk system stores files, but does always have the effect of
+deleting the file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "lisds/dsip",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="image_for_optimize.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">2D arrays, images, optimization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dictionaries.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dictionaries</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#listing-files-in-a-directory">Listing files in a directory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-files-with-glob">Selecting files with <code class="docutils literal notranslate"><span class="pre">glob</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-around-the-output-of-glob"><code class="docutils literal notranslate"><span class="pre">list</span></code> around the output of <code class="docutils literal notranslate"><span class="pre">glob</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deleting-files">Deleting files</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matthew Brett and Peter Rush
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

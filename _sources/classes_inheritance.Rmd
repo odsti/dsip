@@ -1,0 +1,431 @@
+---
+jupyter:
+  orphan: true
+  jupytext:
+    notebook_metadata_filter: all,-language_info
+    split_at_heading: true
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.16.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+# Classes and inheritance
+
+
+Classes are everywhere in Python.  Every value in Python belongs to a class.  Put another way, every value has a *type* - also known as a *class*.   To say it again, the *type* of a value is also its *class*.
+
+
+Let's start with very basic type — `str`.
+
+Here's a value of type (class) str:
+
+```{python}
+a = 'ten'
+type(a)
+```
+
+The `type` function asks Python to display the *class* of the value.  We're now going to start using the term *object* for the value - but we will use *object* and *value* interchangeably.
+
+The class defines the default behavior of the object.  For example, the  class defines the things that are attached to the object by default.  There can be *data* attached to the object (known as *attributes*), and *functions* attached to the object (known as *methods*).
+
+
+In fact, the `str` type defines no attributes (data) for the string, it only defines functions (methods).  An example method is `upper`:
+
+```{python}
+# Run the function "upper" attached to (.) the value "a",
+# of type "str".
+a.upper()
+```
+
+The Python value `str` is a `type` (a class).  That is, it is a thing that provides the defines other things.
+
+```{python}
+type(str)
+```
+
+Every value (object) in Python has a corresponding definition (type).  This is the same as saying that every object (value) in Python has a class (type).
+
+
+You can use the type (class) to create value of that type.  You have already seen this for strings:
+
+```{python}
+# Use str to create a new value of type str
+str(10000)
+```
+
+Why do you need to know about types (classes)?   Because you can define and use your own classes to extend the behavior of existing types, or make new types.
+
+
+## Extending behavior with inheritance
+
+
+As you know, you can create strings (objects of type `str`) using the `str` type:
+
+```{python}
+n = str(10000)
+n
+```
+
+```{python}
+type(n)
+```
+
+Now let's say we would like to be able to format the string version of the number nicely with thousand separators.   So, we'd like to be able to do something like this:
+
+```python
+n.thousands_separated()
+```
+
+and get the result:
+
+```
+'10_000'
+```
+
+We can't do that at the moment, because the `str` type does not define the `thousands_separated` method.
+
+```{python tags=c("raises-exception")}
+n.thousands_separated()
+```
+
+Maybe the first step would be to make a *function* that does this work, but accepting a string as argument, and returning a string with the thousands separators added.  Here is such a function:
+
+```{python}
+def thou_sep(in_str):
+    """ Return `in_str` with thousands separators.
+
+    Parameters
+    ----------
+    in_str : str
+        String representing integer
+
+    Returns
+    -------
+    out_str : str
+        String with thousands separators inserted.
+
+    Raises
+    ------
+    ValueError: if `in_str` does not represent an integer.
+    """
+    # Check we can make the current string into
+    # an integer without error. That means we crash here, if
+    # this isn't an integer.
+    int(in_str)
+    # Make a list of characters that will form our new string.
+    characters = []
+    for pos in range(len(in_str)):
+        # Do we need to add a separator?
+        if pos != 0:  # We never start with a separator.
+            # How many characters remaining until end
+            # of string?
+            n_from_end = len(in_str) - pos
+            if n_from_end % 3 == 0:  # Divisible by 3?
+                characters.append('_')  # Then add separator.
+        # Always append current character.
+        characters.append(in_str[pos])
+    # Re-assemble string from characters in list.
+    return ''.join(characters)
+```
+
+```{python}
+# Some examples:
+print('100 with separators:', thou_sep('100'))
+print('1000 with separators:', thou_sep('1000'))
+print('10000 with separators:', thou_sep('10000'))
+```
+
+Notice we get an error if the string we send cannot be made into an integer:
+
+```{python tags=c("raises-exception")}
+thou_sep('A string that does not represent an integer')
+```
+
+We can get the behavior we want by calling the function on a string, but
+perhaps we would like to make a version of `str` that has
+a `thousands_separated` method.
+
+
+To do this, we can *extend* the `str` type by making a new `class` that
+*inherits* from `str` like this:
+
+```{python}
+# Define a new class (type) called NiceStr
+class NiceStr(str):  # Inherit from the str type
+
+    # Define a new function (method) to operate on
+    # NiceStr values.
+    def thousands_separated(self):
+        # The "self" argument is the string we are
+        # attached to.  More below.
+        return thou_sep(self)
+```
+
+Notice the `self` argument to the method.  `self` is an extra magic argument that Python passes to the method, that contains the object to which the method refers.  We will come back to that in a bit.  For now, let's just use the method.
+
+```{python}
+my_n = NiceStr(10000)
+my_n
+```
+
+```{python}
+type(my_n)
+```
+
+```{python}
+my_n.thousands_separated()
+```
+
+```{python}
+print('100 with separators:', NiceStr('100').thousands_separated())
+print('1000 with separators:', NiceStr('1000').thousands_separated())
+print('10000000 with separators:', NiceStr('10000000').thousands_separated())
+```
+
+We mentioned the `self` in the `thousands_separated` method.  This is a piece
+of Python magic.  When Python sees `my_n.thousands_separated()` it will:
+
+* Identify the class (type) of `my_n` - to give `NiceStr`.
+* Translate the call to `NiceStr.thousands_separated(my_n)`.
+
+This means that Python translates this:
+
+```{python}
+my_n.thousands_separated()
+```
+
+to this:
+
+```{python}
+NiceStr.thousands_separated(my_n)
+```
+
+Because of this translation, nearly all method definitions start with the
+`self` argument, meaning, the object to which the method is attached.
+
+
+Notice that our new class (type) *extends* the `str` type, by inheriting from
+it.  The line `class NiceStr(str):` says that the new `NiceStr` type has all
+the behavior of `str` to start with.  If we define a new method in the class
+*body* (the indented code after the `class` line), the new class has all the
+methods `str`, as well as the new method.
+
+The way to say this is that `NiceStr` *inherits* from `str`, and *extends*
+`str` by adding the method `thousands_separated`.
+
+
+## Extending behavior with multiple inheritance
+
+
+Another way to extend the behavior of a type (class), is to use *multiple
+inheritance*.
+
+As the name implies, multiple inheritance means that a new `class` (type)
+inherits from more than one other class.
+
+For example, if a class inherits from two classes, then the new class gets the
+methods and attributes from *both*.
+
+Let's say for example, that we wanted to add a couple of methods to one more
+new classes.
+
+We will use some silly methods for now.
+
+```{python}
+# Inherit from the most basic Python class, "object".
+# "object" has no methods or attributes.
+class SillyMessages(object):
+
+    def message1(self):
+        print('This is a the first silly message')
+
+    def message2(self):
+        print('This is a the first silly message')
+```
+
+As we create a new `NiceStr` object with the class, we can make a new
+`SillyMessages` object with the class:
+
+```{python}
+message_thing = SillyMessages()
+type(message_thing)
+```
+
+We call the `message1` method:
+
+```{python}
+message_thing.message1()
+```
+
+Remember, Python will translate that to:
+
+```{python}
+SillyMessages.message1(message_thing)
+```
+
+We call the `message2` method:
+
+```{python}
+message_thing.message2()
+```
+
+We can use this class to add the silly behavior to a new class, by inheriting
+*both* from the class we are interested in - such as `str` *and* from the
+`SillyMessages` class.  This gives the new class the methods from *both*
+classes.
+
+In this case, we can call the `SillyMessages` a *mixin* class.  This is just
+a term for a class that adds some behavior to another class.
+
+```{python}
+# Inherit both from str and from SillyMessages
+# We are using SillyMessages as a mixin class here.
+class StrWithMessages(str, SillyMessages):
+
+    # For good measure, add another method to our new class.
+    def another_message(self):
+        print('This is a silly messages string type')
+```
+
+Create the new object with the multiple inheritance class:
+
+```{python}
+str_messages = StrWithMessages(10)
+type(str_messages)
+```
+
+Displaying the value uses the usual `str` behavior, because `StrWithMessages`
+inherits from `str`.
+
+```{python}
+str_messages
+```
+
+The new value has the methods from `SillyMessages`, via inheritance:
+
+```{python}
+# Inherited from SillyMessages
+str_messages.message1()
+```
+
+Notice that we didn't inherit from `ThouSep` here, and it was `ThouSep` that
+had the `thousands_separated` method, so we do not have that method in our new
+class:
+
+```{python tags=c("raises-exception")}
+str_messages.thousands_separated()
+```
+
+## Objects, attributes, and initialization
+
+Consider the following new class, with the method `print_information`.  As you'll see, there is a problem with this method, that we will need to fix.
+
+```{python}
+class MyClass(object):
+
+    def print_information(self):
+        print("I am operating on", self)
+        print("I will print the 'information' attribute of", self)
+        print(self.information)
+```
+
+We can make a value of this type (class), with no problem.
+
+The technical term for making a value with a class is *instantiating* the
+class.
+
+```{python}
+# Instantiate the class, using the class name, as above.
+my_class_value = MyClass()
+type(my_class_value)
+```
+
+There's a problem in the `print_information` method that we need to fix.   Have a look at that method above; see if you can define the problem, and predict what will happen below.
+
+```{python tags=c("raises-exception")}
+my_class_value.print_information()
+```
+
+You may have seen that the last line of the `print_information` method prints the value of an `information` attribute.  An attribute is some data (a value) attached to the value.   However, the value `my_class` does not have an attached `information` value, so the method gives an error.
+
+The standard way to attach a value to an object is to pass that value in when
+you create the object.
+
+Remember, you create the object by calling the class, like this:
+
+```{python}
+my_class_value = MyClass()
+```
+
+By calling `MyClass` here (`MyClass()`), we are using `MyClass` as a *class
+constructor*; the call creates (constructs) an instance (object) of the class.
+
+As with other call expressions, we can also pass arguments to the class
+constructor.  But, so far, we don't have any way for the class to know what to
+do with such arguments.
+
+And in fact, to deal with this common case, where we want to do some work in building (constructing) the object, Python has a rule to say that it will look for a method with the special name `__init__` when it makes (constructs) the object.
+
+Let's start by making such an `__init__` method, that does nothing but print a message:
+
+```{python}
+class AnotherClass(object):
+
+    def __init__(self):
+        print('I can do some work to change the object here')
+```
+
+See that Python calls this `__init__` method when it constructs the object:
+
+```{python}
+c = AnotherClass()
+```
+
+We can use this `__init__` method to modify the object.  In particular, we can, for example, send arguments to the `__init__` method, by sending arguments to the class constructor.  For example, here we define `MyClass2` with an `__init__` method that accepts two parameters.  The first is `self`, and this is just an initial starting object that Python has made for us, and provides when it calls `__init__`.  The second is a value we've named `information`, and that we will attach to the new object (in `self`).  Then when we call the class constructor `MyClass2`, we need to pass a value for `information`, so Python can pass it to the `__init__` method.
+
+```{python}
+class MyClass2(object):
+
+    def __init__(self, information):
+        # Attach the information value to the new `self` object.
+        self.information = information
+
+    def print_information(self):
+        print("I am operating on", self)
+        print("I will print the 'information' attribute of", self)
+        print(self.information)
+```
+
+If I try to construct an object of type `MyClass2` without passing the information value, I get an error:
+
+```{python tags=c("raises-exception")}
+# The MyClass2() constructor call now needs an argument, because of the
+# __init__ method.
+my_class2_object = MyClass2()
+```
+
+So, let's provide the `information` value:
+
+
+```{python}
+my_class2_object = MyClass2('any kind of value')
+```
+
+Now the object *does* have an information attribute:
+
+```{python}
+my_class2_object.information
+```
+
+Therefore, the `print_information` method now works without error:
+
+
+```{python}
+my_class2_object.print_information()
+```

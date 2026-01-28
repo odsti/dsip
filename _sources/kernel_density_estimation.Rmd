@@ -1,0 +1,218 @@
+---
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all,-language_info
+    split_at_heading: true
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.16.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+# Kernel density estimation
+
+```{python}
+import numpy as np
+import pandas as pd
+import scipy.stats as sps
+import matplotlib.pyplot as plt
+# Enable copy_on_write for Pandas<3
+if int(pd.__version__.split('.')[0]) < 3:
+    pd.set_option('mode.copy_on_write', True)
+import seaborn as sns
+```
+
+Also see: [Kernel density
+estimation](https://jakevdp.github.io/PythonDataScienceHandbook/05.13-kernel-density-estimation.html)
+in the [Python Data Science
+Handbook](https://jakevdp.github.io/PythonDataScienceHandbook).
+
+Let us go back to the Penguin dataset:
+
+
+```{python}
+penguins = pd.read_csv('data/penguins.csv').dropna()
+penguins
+```
+
+In fact, let's imagine we're getting ready to do some prediction task, so we've
+split the data into a test and train set.
+
+```{python}
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    penguins[['bill_depth_mm']],
+    penguins['species'])
+X_train
+```
+
+For the moment, we're only going to look at the Chinstrap penguins.
+
+```{python}
+# Select the Chinstrap penguins from the training set.
+chinstrap_train = X_train[y_train == 'Chinstrap']
+chinstrap_train
+```
+
+```{python}
+len(chinstrap_train)
+```
+
+We're particularly interested in the histogram of the bill depth.  We'll use
+the density version of the histogram, normalized to a bar area of 1:
+
+```{python}
+bill_depth = chinstrap_train['bill_depth_mm']
+plt.hist(bill_depth, density=True);
+```
+We can also mark where the actual points fall on the x-axis, like this:
+
+```{python}
+plt.hist(bill_depth, density=True);
+tick_y = np.zeros(len(bill_depth)) - 0.01
+# Black marks at the actual values.
+plt.plot(bill_depth, tick_y, '|k', markeredgewidth=1);
+plt.title('Density histogram with 10 bins, point markers');
+```
+
+Notice this histogram is rather blocky. We could try increasing the number of
+bins, but we've only got 51 rows to play with:
+
+```{python}
+plt.hist(chinstrap_train, bins=20, density=True);
+# Black marks at the actual values.
+plt.plot(bill_depth, tick_y, '|k', markeredgewidth=1);
+plt.title('Density histogram with 20 bins');
+```
+
+Oops - that's even worse.  We can see that small variations in the weights are
+going to push the blocks back and forth, changing our estimate of the
+densities.
+
+We'd like some estimate of what this density histogram would look like if we
+had a lot more data.
+
+This estimate is called a *kernel density* estimate.
+
+
+We are going to *blur* the histogram by replacing the points that stack up into
+the bars, by little normal distributions.  Let's give these normal
+distributions a standard deviation of (arbitrarily) 0.25.
+
+```{python}
+dist_sd = 0.25
+```
+
+First consider the maximum point:
+
+```{python}
+bd_max = np.max(bill_depth)
+bd_max
+```
+
+We'll make a little normal distribution centered on that point:
+
+```{python}
+# Distribution with mean bd_max, standard deviaion dist_d
+max_nd = sps.norm(bd_max, dist_sd)
+```
+
+```{python}
+# x axis values for which to calculate y-axis values.
+nd_x = np.linspace(
+    bill_depth.min() - 4 * dist_sd,
+    bill_depth.max() + 4 * dist_sd,
+    1000
+)
+```
+
+We can plot that on the same plot as before.
+
+```{python}
+# Black marks at the actual values.
+plt.plot(bill_depth, tick_y, '|k', markeredgewidth=1);
+plt.fill_between(nd_x, max_nd.pdf(nd_x), alpha=0.5, color='r')
+plt.title('Gaussian corresponding to maximum value');
+```
+
+Here we've replaced the single point (the maximum) with a spread-out version of
+that point.
+
+
+Now let's do the same for all the points.
+
+```{python}
+# Black marks at the actual values.
+plt.plot(bill_depth, tick_y, '|k', markeredgewidth=1);
+# A normal distribution for each point
+values = np.array(chinstrap_train)
+for point in values:
+    dist_for_pt = sps.norm(point, dist_sd)
+    plt.fill_between(nd_x, dist_for_pt.pdf(nd_x), alpha=0.1,
+                     color='r')
+plt.title('Gaussians comprising KDE estimate');
+```
+
+Finally, add up all these normal distributions:
+
+```{python}
+y_values = np.zeros(len(nd_x))
+for point in bill_depth:
+    dist_for_pt = sps.norm(point, dist_sd)
+    y_values += dist_for_pt.pdf(nd_x)
+```
+
+This is the shape of our kernel density estimate - we still need to get the
+y-axis scaling right, but a few cells down.
+
+```{python}
+plt.fill_between(nd_x, y_values, alpha=0.5, color='r');
+plt.title('KDE before normalizing area to 1');
+```
+
+Finally, divide this curve by the area under the curve to get the kernel
+density estimate.
+
+```{python}
+# The gap between the x values
+delta_x = np.diff(nd_x)[0]
+# Divide by sum and by gap
+kde_y = y_values / np.sum(y_values) / delta_x
+```
+
+```{python}
+plt.hist(chinstrap_train, bins=20, density=True);
+# Black marks at the actual values.
+plt.plot(bill_depth, tick_y, '|k', markeredgewidth=1);
+# Show the kernel density estimate
+plt.fill_between(nd_x, kde_y, alpha=0.5, color='r')
+plt.title('KDE and raw density histogram');
+```
+
+This is our kernel density estimate.
+
+We get the same estimate from Scikit-learn.
+
+```{python}
+from sklearn.neighbors import KernelDensity
+
+# instantiate and fit the KDE model
+skl_kde = KernelDensity(bandwidth=dist_sd, kernel='gaussian')
+skl_kde.fit(values)
+
+# score_samples returns the log of the probability density.
+logprob = skl_kde.score_samples(nd_x[:, None])
+# Convert to probability density.
+skl_kde_y = np.exp(logprob)
+
+# This gives the same plot as our original calculation.
+assert np.allclose(kde_y, skl_kde_y)  # Values the same.
+plt.fill_between(nd_x, np.exp(logprob), alpha=0.5, color='r');
+plt.title('KDE from Scikit-learn');
+```

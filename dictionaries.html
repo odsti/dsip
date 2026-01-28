@@ -1,0 +1,1372 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dictionaries &#8212; Data Science in Practice</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dictionaries';</script>
+    <link rel="canonical" href="https://lisds.github.io/dsip/dictionaries.html" />
+    <link rel="icon" href="_static/dsfe_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Pandas and dictionaries" href="pandas_and_dicts.html" />
+    <link rel="prev" title="Using the pathlib module" href="pathlib.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/dsfe_logo.png" class="logo__image only-light" alt="Data Science in Practice - Home"/>
+    <script>document.write(`<img src="_static/dsfe_logo.png" class="logo__image only-dark" alt="Data Science in Practice - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Coding background</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="assert.html">Using <code class="docutils literal notranslate"><span class="pre">assert</span></code> for testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arrays_and_images.html">Arrays as images, images as arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_and_argmin.html">Where and argmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_2d.html">Where in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_for_optimize.html">2D arrays, images, optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pathlib.html">Using the <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> module</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pandas_and_dicts.html">Pandas and dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lambda_functions.html">Lambda functions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reading formulae</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="on_vectors.html">Vectors and dot products</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_vectors.html">Numpy, arrays, and vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algebra_of_sums.html">Some algebra with summation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_notation.html">Notation for linear regression models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector_projection.html">Vector projection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_introduction.html">Introducing principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_dimension_reduction.html">Dimension reduction with Principal Component Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intermediate regression</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_multiple_predictors.html">Linear regression notation for models with multiple predictors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epl_modeling.html">Attack or defense?  An example of multiple regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression_categorical_predictors.html">Categorical predictors in linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple_predictors_statistical_adjustment.html">Statistical Adjustment in Multi-predictor Linear Regression Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logistic_regression_cross_validation.html">Multiple Logistic Regression, Model Selection and Cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cost_functions.html">Fitting models with different cost functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_notation.html">Expressing the linear model with matrices</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Classification</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="naive_bayes.html">Naive Bayes classifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k_means.html">k-means clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Working with data</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="data_work.html">The problem with data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing on your computer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the-problem-with-notebooks.html">The joys and sorrows of notebooks</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/lisds/dsip/main?urlpath=lab/tree/dictionaries.Rmd" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://ds.lis.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A//github.com/lisds/dsip&urlpath=lab/tree/dsip/dictionaries.Rmd&branch=main" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on JupyterHub"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="JupyterHub logo" src="_static/images/logo_jupyterhub.svg">
+  </span>
+<span class="btn__text-container">JupyterHub</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/edit/main/dictionaries.Rmd" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/issues/new?title=Issue%20on%20page%20%2Fdictionaries.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/dictionaries.Rmd" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.Rmd</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Dictionaries</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-dictionaries-with">Building dictionaries with <code class="docutils literal notranslate"><span class="pre">{}</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-dictionaries-with-keyword-arguments">Building dictionaries with keyword arguments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keys-are-unique">Keys are unique</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Keys are unique</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-over-keys-and-values">Iterating over keys and values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-value-pairs">Key, value pairs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#update">Update</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keys-don-t-have-to-be-strings">Keys don’t have to be strings</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dictionaries">
+<h1>Dictionaries<a class="headerlink" href="#dictionaries" title="Link to this heading">#</a></h1>
+<p>Dictionaries are <em>mappings</em>.  They give the relationships between things.</p>
+<p>This will be clearer with an example.</p>
+<p>Let’s say we are interested in the English Premier League (EPL).</p>
+<p>In particular, we are interested in wage bills of each team.  We will
+confine our attention to teams outside London, suspecting that teams in London
+have to spend more in wages, because London is such an expensive city.</p>
+<p>We consult the data on <a class="reference external" href="https://www.spotrac.com/epl/payroll/2022">2022-2023 EPL wages</a>, and the <a class="reference external" href="https://en.wikipedia.org/wiki/2022%E2%80%9323_Premier_League">EPL league table</a> and we find these values:</p>
+<ul class="simple">
+<li><p>Manchester City came first in the League, and spent an estimated £185,240,000 on wages.</p></li>
+<li><p>Manchester United came third in the League, and spent an estimated £212,135,000 on wages.</p></li>
+<li><p>Liverpool came fifth, and spent £160,868,000.</p></li>
+</ul>
+<p>We want a way to store the correspondence (or <em>mapping</em>) between the name of team and their wage bill.  If we have the team name, we want to be able to fetch the corresponding wage bill.</p>
+<p>One way of doing this is a basic Python data type called a <em>dictionary</em>.</p>
+<p>Here is an empty dictionary:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">wages</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dict
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can fill this dictionary by entering pairs of values.  The pair is in the form of a <em>key</em> and a <em>value</em>.   To start with, let us put the key and value into their own variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;Manchester City&#39;</span>
+<span class="n">value</span> <span class="o">=</span> <span class="mi">185_240_000</span>
+<span class="n">value</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>185240000
+</pre></div>
+</div>
+</div>
+</div>
+<p>By the way, notice the underscores in <code class="docutils literal notranslate"><span class="pre">185_240_000</span></code>.  These are just for decoration, to make it easier for us humans to read the number we typed in.  Notice that Python still reads this number as if it had no underscores.  The underscores look nice where they are, because they delimit the thousands and millions, but Python just ignores them; you can put them anywhere you want:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">18_52_4000_0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>185240000
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now back to the key and the value.   We enter this pair into the dictionary like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that the dictionary is now no longer empty.  It has one <em>entry</em>, where the entry consists of our key and our value.  This entry says:</p>
+<blockquote>
+<div><p>If you ask “Manchester City”, I’ll answer 185240000</p>
+</div></blockquote>
+<p>That is, if you give the dictionary the key “Manchester City” it will return the corresponding value 18524000.</p>
+<p>You <em>give</em> the dictionary the key by <em>indexing</em>.  Indexing occurs where we follow the value (here <code class="docutils literal notranslate"><span class="pre">wages</span></code>) by square brackets <code class="docutils literal notranslate"><span class="pre">[]</span></code>.  Inside the square brackets we put the key for which we want the value:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Indexing into the dictionary with a key gives </span>
+<span class="c1"># the corresponding value.</span>
+<span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Manchester City&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>185240000
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let us enter the other key value pairs:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Manchester United&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">212_135_000</span> 
+<span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Liverpool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">160_868_000</span>
+<span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 160868000}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice the dictionary has three entries now.  Each entry is the pair of <em>key</em> (the team name) and <em>value</em> (the corresponding wage bill.</p>
+<p>We can fetch the wage bills corresponding to each team, using the team name:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Manchester United&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>212135000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Liverpool&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>160868000
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here we first created an empty dictionary, and filled in the three elements with assignment statements like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Manchester United&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">212135000</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="building-dictionaries-with">
+<h2>Building dictionaries with <code class="docutils literal notranslate"><span class="pre">{}</span></code><a class="headerlink" href="#building-dictionaries-with" title="Link to this heading">#</a></h2>
+<p>We can also create dictionaries directly with key, value pairs, like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating the dictionary and adding the key, value pairs.</span>
+<span class="n">wages_again</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Manchester City&#39;</span><span class="p">:</span> <span class="mi">185_240_000</span><span class="p">,</span>
+               <span class="s1">&#39;Manchester United&#39;</span><span class="p">:</span> <span class="mi">212_135_000</span><span class="p">,</span>
+               <span class="s1">&#39;Liverpool&#39;</span><span class="p">:</span> <span class="mi">160_868_000</span><span class="p">}</span>
+<span class="n">wages_again</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 160868000}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice the syntax for the value on the left hand side that creates the
+dictionary.  There is:</p>
+<ul class="simple">
+<li><p>An open curly bracket <code class="docutils literal notranslate"><span class="pre">{</span></code> followed by none or more of:</p>
+<ul>
+<li><p>Key value pairs, written as:</p>
+<ul>
+<li><p>The key then</p></li>
+<li><p>colon <code class="docutils literal notranslate"><span class="pre">:</span></code></p></li>
+<li><p>the value then</p></li>
+<li><p>a comma (if more key value pairs follow).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>A closing curly bracket <code class="docutils literal notranslate"><span class="pre">}</span></code>.</p></li>
+</ul>
+</section>
+<section id="building-dictionaries-with-keyword-arguments">
+<h2>Building dictionaries with keyword arguments<a class="headerlink" href="#building-dictionaries-with-keyword-arguments" title="Link to this heading">#</a></h2>
+<p>In fact there is another common way to create dictionaries, using the <code class="docutils literal notranslate"><span class="pre">dict</span></code> function.  (We say “function”, but in fact it’s a Python class.  That doesn’t matter for our purposes, you use the <code class="docutils literal notranslate"><span class="pre">dict</span></code> class by calling it, like a function).</p>
+<p>You can call <code class="docutils literal notranslate"><span class="pre">dict</span></code> in various ways — try a cell with <code class="docutils literal notranslate"><span class="pre">dict?</span></code> to see the help for <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
+<p>However, the most common use of <code class="docutils literal notranslate"><span class="pre">dict</span></code> is to make clever use of <em>keyword arguments</em>.   Again, an example may be clearer than an explanation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">more_wages</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Liverpool</span><span class="o">=</span><span class="mi">160_868_000</span><span class="p">,</span>
+                  <span class="n">Everton</span><span class="o">=</span><span class="mi">80_707_000</span><span class="p">,</span>
+                  <span class="n">Leeds</span><span class="o">=</span><span class="mi">20_800_000</span><span class="p">)</span>
+<span class="n">more_wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Liverpool&#39;: 160868000, &#39;Everton&#39;: 80707000, &#39;Leeds&#39;: 20800000}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice the trick.  We pass the value for Liverpool with a <em>keyword argument</em>, with name “Liverpool” and value <code class="docutils literal notranslate"><span class="pre">160_868_000</span></code>.   <code class="docutils literal notranslate"><span class="pre">dict</span></code> then creates the dict with the keys from the keyword argument names, and the values from the keyword argument values.</p>
+<p>Perhaps you noticed that we didn’t use “Manchester United” or “Manchester City” in the <code class="docutils literal notranslate"><span class="pre">dict</span></code> example above.  Why? (We suggest you try and work this out before going to the next cell).</p>
+<p>We didn’t use “Manchester United” with <code class="docutils literal notranslate"><span class="pre">dict</span></code> because it would have failed with an error:</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bad_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span><span class="o">=</span><span class="mi">212_135_000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>  <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+    <span class="n">bad_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span><span class="o">=</span><span class="mi">212_135_000</span><span class="p">)</span>
+                    <span class="o">^</span>
+<span class="ne">SyntaxError</span>: invalid syntax. Perhaps you forgot a comma?
+</pre></div>
+</div>
+</div>
+</div>
+<p>What happened there?   Keyword arguments to functions have to be <a class="reference external" href="https://lisds.github.io/textbook/code-basics/Names.html">valid variable names</a> in Python, because, in general, they do become variables inside the function.   For example, here’s a function with a keyword argument (<code class="docutils literal notranslate"><span class="pre">my_var=10</span></code>):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">my_func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">my_var</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>  <span class="c1"># Notice the my_var=10 keyword argument.</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">my_var</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_func</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Uses the default my_var=10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">my_var</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c1"># Sets a not-default value for my_var</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>200
+</pre></div>
+</div>
+</div>
+</div>
+<p>Therefore, keyword argument names must be valid Python variable names, and these cannot contain spaces.</p>
+<p>The upshot is, the <code class="docutils literal notranslate"><span class="pre">dict(first_key=first_value)</span></code> trick is a nice one, but it will only work if all your keys are strings that are also valid Python variable names, such as <code class="docutils literal notranslate"><span class="pre">Liverpool</span></code> and <code class="docutils literal notranslate"><span class="pre">Leeds</span></code> above.</p>
+</section>
+<section id="keys-are-unique">
+<h2>Keys are unique<a class="headerlink" href="#keys-are-unique" title="Link to this heading">#</a></h2>
+<p>Consider our original <code class="docutils literal notranslate"><span class="pre">wages</span></code> dictionary:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 160868000}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s say I discovered that Liverpool had hired someone else, and their actual wage bill was £164,000,000.  You can imagine that I could change the original dictionary with:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Liverpool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">164_000_000</span>
+<span class="c1"># Show the result</span>
+<span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 164000000}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that the original <code class="docutils literal notranslate"><span class="pre">wages</span></code> value (dictionary) has changed, with a new value for the key <code class="docutils literal notranslate"><span class="pre">Liverpool</span></code>.</p>
+<p>A technical note: we have discovered that the dictionary value is <em>mutable</em>
+— meaning, you can change the contents of the value, without making a new copy.
+See the <a class="reference internal" href="mutable.html"><span class="doc std std-doc">mutable / immutable page</span></a> for more detail.</p>
+</section>
+<section id="id1">
+<h2>Keys are unique<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Now - returning to the dictionary.   Notice that with:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="p">[</span><span class="s1">&#39;Liverpool&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">164_000_000</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>we didn’t make a new repeated key, we replaced the value corresponding to the original <code class="docutils literal notranslate"><span class="pre">Liverpool</span></code> key.  Perhaps that is obvious in this case, as <code class="docutils literal notranslate"><span class="pre">wages['Liverpool']</span></code> on the left hand side is going to point to the value for <code class="docutils literal notranslate"><span class="pre">wages['Liverpool']</span></code> and that value will be set to the new number <code class="docutils literal notranslate"><span class="pre">164_000_000</span></code>.  Slightly less obvious is the fact that this will happen when we build the dictionary in one go:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating the dictionary and adding the key, value pairs.</span>
+<span class="n">wages_at_once</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Manchester City&#39;</span><span class="p">:</span> <span class="mi">185_240_000</span><span class="p">,</span>
+                 <span class="s1">&#39;Manchester United&#39;</span><span class="p">:</span> <span class="mi">212_135_000</span><span class="p">,</span>
+                 <span class="s1">&#39;Liverpool&#39;</span><span class="p">:</span> <span class="mi">160_868_000</span><span class="p">,</span>
+                 <span class="s1">&#39;Liverpool&#39;</span><span class="p">:</span> <span class="mi">164_000_000</span><span class="p">}</span>
+<span class="n">wages_at_once</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 164000000}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that, even here, when we construct the dictionary, Python overwrites the
+first value associated with the <code class="docutils literal notranslate"><span class="pre">Liverpool</span></code> key, with the second value, as it
+builds the dictionary.   This means that it is not possible to create
+a dictionary with duplicate keys — the keys of the dictionary are unique.</p>
+</section>
+<section id="iterating-over-keys-and-values">
+<h2>Iterating over keys and values<a class="headerlink" href="#iterating-over-keys-and-values" title="Link to this heading">#</a></h2>
+<p>You can get the keys of the dictionary with:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dict_keys([&#39;Manchester City&#39;, &#39;Manchester United&#39;, &#39;Liverpool&#39;])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The thing that comes back from the <code class="docutils literal notranslate"><span class="pre">.keys()</span></code> method is a special container that
+refers to the keys in the dictionary.  You can use the container after the <code class="docutils literal notranslate"><span class="pre">in</span></code>
+of a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop, like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">wages</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Manchester City
+Manchester United
+Liverpool
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice the form of the <code class="docutils literal notranslate"><span class="pre">for</span></code> line above.  It is <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">variable</span> <span class="pre">in</span> <span class="pre">expression:</span></code>, where, in our case:</p>
+<ul class="simple">
+<li><p>The variable is <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p></li>
+<li><p>The expression is <code class="docutils literal notranslate"><span class="pre">wages.keys()</span></code>.</p></li>
+</ul>
+<p>As you know, we can use any name for the variable.</p>
+<p>The expression can be anything that represents a sequence of things.  In Python
+technical terms, it must be an <em>iterable</em> — something that we can request
+a sequence of things from.  The thing that comes back from <code class="docutils literal notranslate"><span class="pre">wages.keys()</span></code> is
+such an iterable.</p>
+<p>Another way you can use an iterable such as <code class="docutils literal notranslate"><span class="pre">wages.keys()</span></code> is to pass it to
+<em>constructor</em> functions like <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">tuple</span></code> or <code class="docutils literal notranslate"><span class="pre">np.array</span></code>.   In that case,
+the constructor gets all the values from the iterator thing, and puts them into
+the relevant container</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">wages</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Manchester City&#39;, &#39;Manchester United&#39;, &#39;Liverpool&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wages</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array(dict_keys([&#39;Manchester City&#39;, &#39;Manchester United&#39;, &#39;Liverpool&#39;]),
+      dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In fact, the dictionary is itself iterable.  That is, you can also ask the dictionary to give a sequence of things.  And in fact, that sequence of things is just the keys:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Asking the dictionary to iterate, gives the keys.</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">wages</span><span class="p">:</span>  <span class="c1"># Identical to &quot;for key in wages.keys():&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Manchester City
+Manchester United
+Liverpool
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Asking the dictionary to iterate, gives the keys.</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">wages</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Manchester City&#39;, &#39;Manchester United&#39;, &#39;Liverpool&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>As you might guess, you can also iterate over the corresponding values of the
+dictionary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">wages</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>185240000
+212135000
+164000000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">wages</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[185240000, 212135000, 164000000]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that values arrive in the same order as the corresponding keys.</p>
+</section>
+<section id="key-value-pairs">
+<h2>Key, value pairs<a class="headerlink" href="#key-value-pairs" title="Link to this heading">#</a></h2>
+<p>Think of the dictionary as a store of key, value pairs.  You find a <em>value</em> with the corresponding <em>key</em>.  Put another way, you can look up the value using the key.  Or again, the dictionary is a <em>mapping</em> between keys and values.  As you have seen, or example dictionary has keys:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">wages</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>  <span class="c1"># or list(wages)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Manchester City&#39;, &#39;Manchester United&#39;, &#39;Liverpool&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>and values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">wages</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[185240000, 212135000, 164000000]
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">len()</span></code> gets the number of key, value pairs in the dictionary.  Of course this is the same as the number of keys, and the same as the number of values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">wages</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see the component key, value <em>pairs</em>, by using the <code class="docutils literal notranslate"><span class="pre">.items()</span></code> method of the dictionary.  One <em>item</em> is a pair — a single key, value pair.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">wages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;Manchester City&#39;, 185240000)
+(&#39;Manchester United&#39;, 212135000)
+(&#39;Liverpool&#39;, 164000000)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s the last <code class="docutils literal notranslate"><span class="pre">pair</span></code>, left from the execution of the loop above:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pair</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;Liverpool&#39;, 164000000)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We may want to put the key and the value into their own variables, rather than keeping them together in a tuple like this.  This is a job for <a class="reference external" href="https://lisds.github.io/textbook/mean-slopes/using_minimize#unpacking">unpacking</a>.  Unpacking occurs when you have a sequence on the right hand side of an expression, and multiple values on the left.  Here we unpack the pair into two variables, <code class="docutils literal notranslate"><span class="pre">key</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Unpacking.</span>
+<span class="c1"># Two variables on the left, sequence of length two on the right.</span>
+<span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">pair</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Key is&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Value is&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Key is Liverpool
+Value is 164000000
+</pre></div>
+</div>
+</div>
+</div>
+<p>You will often see this happening in <code class="docutils literal notranslate"><span class="pre">for</span></code> loops, like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">wages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This key is&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This value is&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This key is Manchester City
+This value is 185240000
+This key is Manchester United
+This value is 212135000
+This key is Liverpool
+This value is 164000000
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="update">
+<h2>Update<a class="headerlink" href="#update" title="Link to this heading">#</a></h2>
+<p>Dictionaries have an <code class="docutils literal notranslate"><span class="pre">update()</span></code> method that pulls key, value pairs across from another dictionary:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 164000000}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_wages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;West Bromwich Albion&#39;</span><span class="p">:</span> <span class="mi">4_716_200</span><span class="p">,</span>
+             <span class="s1">&#39;Hull City&#39;</span><span class="p">:</span> <span class="mi">520_000</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">wages</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_wages</span><span class="p">)</span>
+<span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that Jupyter / IPython does not display anything for the result.</p>
+<p>This is because the thing that came back from that operation was the value <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>Python sends back that result to remind you that the <code class="docutils literal notranslate"><span class="pre">update()</span></code> is not creating a new dictionary, it is updating the original dictionary, in this case, <code class="docutils literal notranslate"><span class="pre">wages</span></code>.  Notice that <code class="docutils literal notranslate"><span class="pre">wages</span></code> now has the new keys and values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update modified &#39;wages&#39;</span>
+<span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 185240000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 164000000,
+ &#39;West Bromwich Albion&#39;: 4716200,
+ &#39;Hull City&#39;: 520000}
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">update()</span></code> will overwrite key, value pairs that exist already in the left-hand-side dictionary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Notice new, different value for Man City.</span>
+<span class="n">more_new_wages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Sheffield&#39;</span><span class="p">:</span> <span class="mi">15_679_600</span><span class="p">,</span>
+                  <span class="s1">&#39;Manchester City&#39;</span><span class="p">:</span> <span class="mi">100_000_000</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wages</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">more_new_wages</span><span class="p">)</span>  <span class="c1"># Returns None</span>
+<span class="c1"># wages modified</span>
+<span class="n">wages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;Manchester City&#39;: 100000000,
+ &#39;Manchester United&#39;: 212135000,
+ &#39;Liverpool&#39;: 164000000,
+ &#39;West Bromwich Albion&#39;: 4716200,
+ &#39;Hull City&#39;: 520000,
+ &#39;Sheffield&#39;: 15679600}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="keys-don-t-have-to-be-strings">
+<h2>Keys don’t have to be strings<a class="headerlink" href="#keys-don-t-have-to-be-strings" title="Link to this heading">#</a></h2>
+<p>So far we have used strings as the <code class="docutils literal notranslate"><span class="pre">dict</span></code> keys.  Strings are the most common
+types of keys, but in fact, you can use many <a class="reference internal" href="mutable.html"><span class="doc std std-doc">immutable types</span></a> as
+keys.  Just for example, let’s say we wanted to be able to look up the EPL
+teams by their league <em>position</em>, rather than by name.   We only have and want
+the data for teams outside London, so we can’t use a list — we don’t have
+a continuous series of positions to record.  In that case one might use the
+<em>position number</em> for keys, and the team names as values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Notice that Arsenal was second, but that&#39;s in London, so we don&#39;t include it here.</span>
+<span class="n">by_position</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;Manchester City&#39;</span><span class="p">,</span>
+               <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;Manchester United&#39;</span><span class="p">,</span>
+               <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;Newcastle&#39;</span><span class="p">,</span>
+               <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;Liverpool&#39;</span><span class="p">}</span>
+<span class="n">by_position</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{1: &#39;Manchester City&#39;, 3: &#39;Manchester United&#39;, 4: &#39;Newcastle&#39;, 5: &#39;Liverpool&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that the <em>keys</em> here are numbers, and the <em>values</em> are strings.  As ever, the we get the values by indexing with the corresponding key:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">by_position</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Newcastle&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can use many other types as keys, but in practice you won’t need this
+feature often in your programming life; you can look up dictionaries in more
+detail when you need to.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "lisds/dsip",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pathlib.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Using the <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> module</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pandas_and_dicts.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Pandas and dictionaries</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-dictionaries-with">Building dictionaries with <code class="docutils literal notranslate"><span class="pre">{}</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-dictionaries-with-keyword-arguments">Building dictionaries with keyword arguments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keys-are-unique">Keys are unique</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Keys are unique</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-over-keys-and-values">Iterating over keys and values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-value-pairs">Key, value pairs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#update">Update</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keys-don-t-have-to-be-strings">Keys don’t have to be strings</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matthew Brett and Peter Rush
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

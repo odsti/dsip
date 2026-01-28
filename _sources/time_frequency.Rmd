@@ -1,0 +1,469 @@
+---
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all,-language_info
+    split_at_heading: true
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.16.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  orphan: true
+---
+
+# Time and frequency
+
+
+The Fourier transform can take the values of a 1D array, and recast these values as  for sinusoids.
+
+The key thing to understand in the Fourier transform is the idea of rewriting
+the input 1D signal as a series of *coefficients* (weights) for *basis
+functions*.   We will start with some very trivial basis functions, and then
+move on to the much less trivial [Fourier basis
+functions](https://matthew-brett.github.io/teaching/fourier_basis.html), which
+are sinusoids.
+
+```{python}
+import numpy as np
+rng = np.random.default_rng()
+np.set_printoptions(suppress=True, precision=2)
+import pandas as pd
+# Enable copy_on_write for Pandas<3
+if int(pd.__version__.split('.')[0]) < 3:
+    pd.set_option('mode.copy_on_write', True)
+import matplotlib.pyplot as plt
+# Set default colormap.
+plt.rc('image', cmap='Greys')
+```
+
+The data are from the [first training file in a single-lead ECG
+dataset](https://github.com/odsti/datasets/tree/main/ecg).  We select the first
+512 samples.  The sampling rate was 300 Hz, so this is just a bit less than
+2 seconds of data.
+
+```{python}
+ecg = pd.read_csv('data/ecg.csv').iloc[:512]
+ecg
+```
+
+```{python}
+plt.plot(ecg)
+plt.xlabel('Sample no')
+plt.ylabel('Amplitude')
+plt.title('Sample single-lead ECG data');
+```
+
+## Basis functions and coefficients
+
+
+We first illustrate the idea of recasting the data as basis functions and
+coefficients (weights), just using the first 10 values in the array.
+
+```{python}
+ecg_arr = np.array(ecg['Amplitude'])
+first_10 = ecg_arr[:10]
+first_10
+```
+
+The key idea is that we can think of these 10 observations as being the weighted sum of some basis functions.
+
+First we will make a very dumb set of basis functions.  These basis functions are called *delta* functions because they have one value that is 1 (the delta) and the rest of the values are 0.
+
+Notice we have one basis function for each sample, in this case:
+
+```{python}
+basis_functions = np.eye(10, dtype=int)
+basis_functions
+```
+
+Show the basis functions as line plots:
+
+```{python}
+fig, axes = plt.subplots(10, 1)
+for row_no in range(10):
+    axes[row_no].plot(basis_functions[row_no])
+```
+
+As a greyscale image:
+
+```{python}
+plt.imshow(basis_functions);
+```
+
+We are going to multiply each of these basis function rows by a corresponding *weight*.  In our case, the right coefficients are the original values.
+
+```{python}
+# The first 10 values, as a column.
+first_10_col = first_10[:, None]
+first_10_col
+```
+
+Here is an image description of the multiplication.  It results in multiplying the first row by `first_10[0]`, the second row by `first_10[1]`, and so on.
+
+```{python}
+fig, axes = plt.subplots(1, 3)
+axes[0].imshow(basis_functions, aspect='auto')
+axes[1].text(0.5, 0.5, '$*$', fontsize=40)
+axes[1].axis('off')
+axes[2].imshow(first_10_col)
+for ax in axes:
+    ax.tick_params(left=False, labelleft=False, bottom=False, labelbottom=False)
+```
+
+The result:
+
+```{python}
+multiplied = basis_functions * first_10_col
+multiplied.astype(int)
+```
+
+```{python}
+plt.imshow(multiplied)
+```
+
+```{python}
+fig, axes = plt.subplots(1, 5)
+axes[0].imshow(multiplied, aspect='auto')
+axes[1].text(0.2, 0.5, '$=$', fontsize=30)
+axes[1].axis('off')
+axes[2].imshow(basis_functions, aspect='auto')
+axes[3].text(0.2, 0.5, '$*$', fontsize=30)
+axes[3].axis('off')
+axes[4].imshow(first_10_col)
+for ax in axes:
+    ax.tick_params(left=False, labelleft=False, bottom=False, labelbottom=False)
+```
+
+Finally, we reconstruct the original signal by summing our multiplied basis functions along the columns (across rows):
+
+```{python}
+reconstructed = multiplied.sum(axis=0)
+reconstructed
+```
+
+We get back the same answer we started with:
+
+```{python}
+first_10
+```
+
+You can do the multiplication and sum procedure in one stop with the *dot-product* procedure.   See [vectors and dot products](https://matthew-brett.github.io/teaching/on_vectors.html) for a description of the dot product idea, and, and see the links at the top of [this PCA tutorial](https://matthew-brett.github.io/teaching/pca_introduction.html) for helpful resources to explain how the dot product works on 2D arrays - to become matrix multiplication.
+
+```{python}
+# Reconstructing from a basis with the dot product:
+first_10.dot(basis_functions)
+```
+
+Of course, we could do the same procedure with all the values in our ECG time-course:
+
+```{python}
+N = len(ecg_arr)
+N
+```
+
+```{python}
+full_basis = np.eye(N)
+plt.imshow(full_basis)
+full_basis.astype(int)
+```
+
+Again, the *coefficients* for each basis function (row) are the original values:
+
+```{python}
+ecg_arr_col = ecg_arr[:, None]
+full_multiplied = full_basis * ecg_arr_col
+full_reconstructed = full_multiplied.sum(axis=0)
+```
+
+When we apply these basis functions times the coefficients, and sum, we get
+back the original values, as before:
+
+```{python}
+np.all(full_reconstructed == ecg_arr)
+```
+
+```{python}
+# Multiply and sum, but using the dot product.
+with_dot = ecg_arr.dot(full_basis)
+np.all(with_dot == ecg_arr)
+```
+
+## The Fourier basis
+
+
+So far our basis functions have been silly - but the Fourier transform uses more interesting basis functions.
+
+To summarize, the Fourier transform finds *sinusoids* as basis functions, and
+*coefficients* for each sinusoid.  It can then express the data as a weighted
+sum of the sinusoids.  The coefficients (weights) express the amount of that
+sinusoid in the original signal.
+
+Let's start by running a Fourier transform on the data.
+
+```{python}
+ft_ecg = np.fft.fft(ecg_arr)
+# Show the first 10 coefficients (weights)
+ft_ecg[:10]
+```
+
+Notice that the resulting coefficients are *complex numbers*.  This is one way
+of expressing *both* the phase of the sinusoid (the left-right shift of the
+cosine wave), and the *amplitude* of the sinusoid.  The first weight
+corresponds to a sinusoid of frequency 0 (no cycles), the next to a sinusoid of
+frequency 1 (one cycle over the whole 1D array), and so on.
+
+```{python}
+# The number of basis functions the Fourier transform has used.
+# This is also the number of sinusoids needed to reconstruct the original data.
+len(ft_ecg)
+```
+
+```{python}
+# The number of samples in the original data.
+N
+```
+
+Rather than go into the complex numbers, we get the amplitude and phase
+information from the complex number coefficients:
+
+```{python}
+# One amplitude for each sinusoid.  `np.abs` does this calculation on complex numbers.
+amplitudes = np.abs(ft_ecg)
+amplitudes[:10]
+```
+
+```{python}
+# One phase (angle) for each sinusoid.
+angles = np.angle(ft_ecg)
+angles[:10]
+```
+
+See <https://matthew-brett.github.io/teaching/fourier_basis.html>
+
+The Fourier transform is therefore using all these basis functions - each basis function is a sinusoid.  The sinusoids become faster and faster in frequency as we go from first to last:
+
+```{python}
+ft_basis = np.zeros((N, N))
+ns = np.arange(N)
+one_cycle = 2 * np.pi * ns / N
+for k in range(N):
+    # Make an input to cos for this frequency.
+    t_k = k * one_cycle
+    # Use the angle to shift the phase of the sinusoid.
+    ft_basis[k, :] = np.cos(t_k + angles[k])
+```
+
+Show the first 10 sinusoids:
+
+```{python}
+fig, axes = plt.subplots(10, 1)
+for i in range(10):
+    axes[i].plot(ft_basis[i])
+axes[-1].set_xlabel('Samples')
+fig.suptitle('First 10 Fourier transform sinusoid bases');
+```
+
+```{python}
+plt.imshow(ft_basis)
+```
+
+Remember, the Fourier transform has re-expressed the original data as the weighted sum of this collection of sinusoids (basis functions).  To reconstruct the original data, we multiply each sinusoid (basis function) by its corresponding weight, and sum the result over the columns (over the weighted sinusoids).
+
+```{python}
+ft_multiplied = ft_basis * amplitudes[:, None]
+ft_multiplied
+```
+
+```{python}
+plt.imshow(ft_multiplied)
+```
+
+```{python}
+# We have to divide by the number of samples to go back from Fourier
+# to time.
+ft_reconstructed = ft_multiplied.sum(axis=0) / N
+ft_reconstructed[:10]
+```
+
+```{python}
+# As above, we can use dot to do the same multiply and sum operation:
+recon_with_dot = amplitudes.dot(ft_basis) / N
+recon_with_dot[:10]
+```
+
+```{python}
+np.allclose(ft_reconstructed, recon_with_dot)
+```
+
+Here's the reconstructed array:
+
+```{python}
+plt.plot(ft_reconstructed)
+plt.title('Time-course reconstructed from Fourier coefficients');
+```
+
+The result reconstructed from the Fourier coefficients is the same (near as dammit) to the original signal:
+
+```{python}
+plt.plot(ecg_arr)
+plt.title('Original time-course')
+np.allclose(ecg_arr, ft_reconstructed)
+```
+
+## The inverse Fourier transform
+
+
+The process above is one way of reversing the Fourier transform (FT) - to take the amplitudes and angles and go back to the original 1D array.
+
+We have used the calculation above to show how the output of the FT relates to the amplitude and angles (phases) of the component sinusoids.  As you saw, we converted the standard output from the FT (complex numbers) to their equivalent amplitude and angle (phase).
+
+The standard way to reverse the FT is to use the *inverse* Fourier transform directly on the complex number output of the FT.
+
+```{python}
+# Here is the output of the FT on the original data.
+ft_ecg = np.fft.fft(ecg_arr)
+# Show the first 10 complex outputs:
+ft_ecg[:10]
+```
+
+As you saw above, we can convert these complex numbers to their equivalent amplitude and angle, and multiply by their corresponding sinusoids to reconstruct the original array:
+
+```{python}
+ecg_again = amplitudes.dot(ft_basis) / N
+np.allclose(ecg_again, ecg_arr)
+```
+
+However, we can also do this using the complex numbers, that are the raw output from the FT - using the `ifft` (Inverse Fourier Transform) function:
+
+```{python}
+ecg_again_via_ifft = np.fft.ifft(ft_ecg)
+ecg_again_via_ifft[:10]
+```
+
+Notice that the output of the inverse FT is also complex, but the imaginary coefficients are all (near as dammit) 0:
+
+```{python}
+np.allclose(ecg_again_via_ifft.imag, 0)
+```
+
+This will always be true for the iFT of an FT on not-complex (real) numbers, as we did here: `ecg_arr` were all not-complex (real) numbers.
+
+## The FT and inverse FT work on any array
+
+
+Just to emphasize, it is possible to prove mathematically that any 1 dimensional array can be decomposed into sinusoids with the Fourier transform - it does not require any particular properties of the input array.   For example, we can do the FT and inverse FT on an array of random numbers - it works in exactly the same way:
+
+```{python}
+# 128 values selected at random from the range 0 through 1.
+random_arr = rng.uniform(size=128)
+random_arr[:10]
+```
+
+```{python}
+ft_rand_arr = np.fft.fft(random_arr)
+ft_rand_arr[:10]
+```
+
+```{python}
+rand_back = np.fft.ifft(ft_rand_arr)
+rand_back[:10]
+```
+
+```{python}
+# The real components of the inverse FT are the original array values.
+np.allclose(random_arr, rand_back.real)
+```
+
+We could also have gone the long way round with our original calculation:
+
+```{python}
+rand_amplitudes = np.abs(ft_rand_arr)
+rand_angles = np.angle(ft_rand_arr)
+rand_n = len(ft_rand_arr)
+```
+
+```{python}
+rand_ft_basis = np.zeros((rand_n, rand_n))
+rand_ns = np.arange(rand_n)
+one_cycle = 2 * np.pi * rand_ns / rand_n
+for k in range(rand_n):
+    t_k = k * one_cycle
+    rand_ft_basis[k, :] = np.cos(t_k + rand_angles[k])
+```
+
+```{python}
+rand_back_long = rand_amplitudes.dot(rand_ft_basis) / rand_n
+np.allclose(rand_back_long, random_arr)
+```
+
+## Fourier basis using $e$
+
+
+It's possible you were wondering how to do the inverse Fourier transform using the original complex coefficients directly (without using `ifft`).  Let's return to the ECG example:
+
+```{python}
+ecg_arr[:10]
+```
+
+```{python}
+# Recalculate the FT of `ecg_arr` array.
+ft_ecg = np.fft.fft(ecg_arr)
+ft_ecg[:10]
+```
+
+```{python}
+# The number of elements in the original array.
+# This is also the number of Fourier coefficients.
+N = len(ecg_arr)
+N
+```
+
+You can see the $e$-based formula for the forward and inverse Fourier transform at [Fourier without the ei](https://matthew-brett.github.io/teaching/fourier_no_ei.html).  Here's the formula for the inverse transform:
+
+$$
+x_n = \frac{1}{N} \sum_{k=0}^{N-1} X_k \; e^{i 2 \pi \frac{k}{N} n}
+$$
+
+Where:
+
+* $N$ is the number of the elements in the original 1D array (and in the array of Fourier coefficients).
+* $\vec{x} = [x_0, x_1, ..., x_{N-1}]$ is the original 1D array (`ecg_arr` in our case).
+* $\vec{X} = [X_0, X_1, ..., X_{N-1}]$ is the 1D array of complex Fourier coefficients (`ft_ecg` in our case).
+
+```{python}
+k = np.arange(N)
+# One row per n in 0 ... N-1 in the formula above.
+e_basis = np.zeros((N, N), dtype=complex)
+for n in np.arange(N):
+    # Each row allows us to implement one summation in the formula.
+    e_basis[n] = np.e ** (1j * 2 * np.pi * k / N * n)
+```
+
+```{python}
+ft_back_with_e = ft_ecg.dot(e_basis) / N
+np.allclose(ft_back_with_e.real, ecg_arr)
+```
+
+In fact the forward transform is almost identical in form:
+
+$$
+X_k = \sum_{n=0}^{N-1} x_n \; e^{-i 2 \pi \frac{k}{N} n}
+$$
+
+Just for completeness, let's do the forward transform without using `fft`, but implementing the formula above:
+
+```{python}
+forward_e_basis = np.zeros((N, N), dtype=complex)
+for n in np.arange(N):
+    # Each row allows us to implement one summation in the formula.
+    forward_e_basis[n] = np.e ** (-1j * 2 * np.pi * k / N * n)
+    
+# Recalculate the FT, using the basis functions.
+ft_forward_e = ecg_arr.dot(forward_e_basis)
+# It's (near as dammit) the same as the fft coefficients.
+np.allclose(ft_forward_e, ft_ecg)
+```

@@ -1,0 +1,610 @@
+---
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all,-language_info
+    split_at_heading: true
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.16.1
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+# Expressing the linear model with matrices
+
+This page is about the notation for linear models.
+
+The linear model can be expressed in terms of matrices.  This makes it:
+
+* Easier to write equations for the model
+* Gives a mathematical expression that is easy to solve with matrix
+  functions.
+
+For more detail on the General Linear Model, see [The general linear model
+and fMRI: Does love last
+forever?](http://matthew.dynevor.org/research/articles/does_glm_love.pdf).
+
+```{python}
+# Import numerical, data and plotting libraries
+import numpy as np
+import numpy.linalg as npl
+import pandas as pd
+# Enable copy_on_write for Pandas<3
+if int(pd.__version__.split('.')[0]) < 3:
+    pd.set_option('mode.copy_on_write', True)
+import matplotlib.pyplot as plt
+# Only show 6 decimals when printing
+np.set_printoptions(precision=6)
+```
+
+This page starts with the model for simple regression. We then show how the
+simple regression gets expressed in a *design matrix*. Once we have that,
+it’s easy to extend simple regression to multiple regression. By adding some
+specially formed regressors, we can also express group membership.
+
+
+## Simple regression
+
+We return to the example in [linear regression
+notation](lin_regression_notation.md), predicting "prestige" scores for
+professions, from various other measures.
+
+```{python}
+df = pd.read_csv('data/Duncan_Occupational_Prestige_Reduced.csv')
+df
+```
+
+Let's start off trying to predict `prestige` with `income`:
+
+```{python}
+prestige = df['prestige']
+income = df['income']
+```
+
+```{python}
+plt.plot(income, prestige, '+')
+plt.xlabel('Income')
+plt.ylabel('Prestige');
+```
+
+Let's immediately rename the values we are *predicting* to `y`, and the
+values we are *predicting with* to `x`:
+
+```{python}
+y = prestige
+x = income
+```
+
+
+Set `n` to the number of observations (observational units, rows):
+
+```{python}
+n = len(prestige)
+n
+```
+
+For this page we will start with a preliminary guess for a straight line that links
+the `income` scores to the `prestige` scores.  It looks like the `prestige` scores go up by about 50 as the `income` scores rise from 10 to 50.  The matching intercept looks like it could be around 5.
+
+```{python}
+b = 50 / 40
+c = 5
+```
+
+We use this line to *predict* the `prestige` scores from the `income` scores.
+
+```{python}
+predicted = b * income + c
+predicted
+```
+
+```{python}
+# Plot the data and the predictions
+plt.plot(x, y, '+', label='Actual data')
+plt.plot(x, predicted, 'ro', label='Predictions')
+plt.xlabel('Income')
+plt.ylabel('Prestige score')
+plt.title('Income vs Prestige with guessed line')
+plt.legend()
+```
+
+As you saw in [regression notation](lin_regression_notation.md), we can write out
+this model more formally and more generally in mathematical symbols.
+
+$\newcommand{\yvec}{\vec{y}} \newcommand{\xvec}{\vec{x}} \newcommand{\evec}{\vec{\varepsilon}}$
+
+We write our `y` (`prestige`) data $\yvec$ — a vector with 15 values, one
+for each profession.
+
+$y_1$ is the value for the first profession and $y_i$ is the value for
+profession $i$ where $i \in 1 .. 15$:
+
+```{python tags=c("hide-input")}
+# Ignore this cell - it is to give a better display to the mathematics.
+# Import Symbolic mathematics routines.
+from sympy import Eq, Matrix, IndexedBase, symbols, init_printing
+from sympy.matrices import MatAdd, MatMul, MatrixSymbol
+
+# Make equations print in definition order.
+init_printing(order='none')
+
+sy_y = symbols(r'\vec{y}')
+sy_y_ind = IndexedBase("y")
+vector_indices = range(1, n + 1)
+sy_y_val = Matrix([sy_y_ind[i] for i in vector_indices])
+
+Eq(sy_y, Eq(sy_y_val, Matrix(y)), evaluate=False)
+```
+
+`x` (the `income` score) is a *predictor*. Lets call the income scores $\xvec$.
+$\xvec$ is another vector with 15 values. $x_1$ is the value for the first
+profession and $x_i$ is the value for profession $i$ where $i \in 1 .. 15$.
+
+```{python tags=c("hide-input")}
+# Ignore this cell - it is to give a better display to the mathematics.
+sy_x = symbols(r'\vec{x}')
+sy_x_ind = IndexedBase("x")
+sy_x_val = Matrix([sy_x_ind[i] for i in vector_indices])
+Eq(sy_x, Eq(sy_x_val, Matrix(x)), evaluate=False)
+```
+
+In [regression notation](lin_regression_notation.md), we wrote our straight
+line model as:
+
+$y_i = bx_i + c + e_i$
+
+
+## Simple regression in matrix form
+
+
+It turns out it will be useful to rephrase the simple regression model
+in *matrix form*. Let’s make the data and predictor and errors into
+vectors.
+
+We already the $y$ values in our $\yvec$ vector above, and the $x$ values in the $\xvec$ vector.
+
+$\evec$ is the vector of as-yet-unknown errors $e_1, e_2,  ... e_{15}$.  The
+values of the errors depend on the predicted values, and therefore, on our
+slope $b$ and intercept $c$.
+
+We calculate the errors as:
+
+```{python}
+e = y - predicted
+```
+
+We write the errors as an error vector:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+sy_e = symbols(r'\vec{\varepsilon}')
+sy_e_ind = IndexedBase("e")
+sy_e_val = Matrix([sy_e_ind[i] for i in vector_indices])
+Eq(sy_e, sy_e_val, evaluate=False)
+```
+
+Now we can rephrase our model as:
+
+$$
+\yvec = b \xvec + c + \evec
+$$
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+sy_b, sy_c = symbols('b, c')
+sy_c_mat = MatrixSymbol('c', n, 1)
+rhs = MatAdd(MatMul(sy_b, sy_x_val), sy_c_mat, sy_e_val)
+Eq(sy_y_val, rhs, evaluate=False)
+```
+
+Confirm this is true when we calculate on our particular values:
+
+```{python}
+# Confirm that y is close as dammit to b * x + c + e
+assert np.allclose(y, b * x + c + e)
+```
+
+Bear with with us for a little trick. We define $\vec{o}$ as a vector of ones,
+like this:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+sy_o = symbols(r'\vec{o}')
+sy_o_val = Matrix([1 for i in vector_indices])
+Eq(sy_o, sy_o_val, evaluate=False)
+```
+
+In code, in our case:
+
+```{python}
+o = np.ones(n)
+```
+
+Now we can rewrite the formula as:
+
+$$
+\yvec = b\xvec + c\vec{o} + \evec
+$$
+
+because $o_i = 1$ and so $co_i = c$.
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+rhs = MatAdd(MatMul(sy_b, sy_x_val), MatMul(sy_c, sy_o_val), sy_e_val)
+Eq(sy_y_val, rhs, evaluate=False)
+```
+
+This evaluates to the result we intend:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+Eq(sy_y_val, sy_c * sy_o_val + sy_b * sy_x_val + sy_e_val, evaluate=False)
+```
+
+```{python}
+# Confirm that y is close as dammit to b * x + c * o + e
+assert np.allclose(y, b * x + c * o + e)
+```
+
+$\newcommand{Xmat}{\boldsymbol X} \newcommand{\bvec}{\vec{\beta}}$
+
+We can now rephrase the calculation in terms of matrix multiplication.
+
+Call $\Xmat$ the matrix of two columns, where the first column is $\xvec$ and 
+the second column is the column of ones ($\vec{o}$ above).
+
+
+In code, for our case:
+
+```{python}
+X = np.stack([x, o], axis=1)
+X
+```
+
+Call $\bvec$ the column vector:
+
+$$
+\left[
+\begin{array}{\bvec}
+b \\
+c \\
+\end{array}
+\right]
+$$
+
+In code:
+
+```{python}
+B = np.array([b, c])
+B
+```
+
+This gives us exactly the same calculation as $\yvec = b \xvec + c + \evec$
+above, but in terms of matrix multiplication:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+sy_beta_val = Matrix([[sy_b], [sy_c]])
+sy_xmat_val = Matrix.hstack(sy_x_val, sy_o_val)
+Eq(sy_y_val, MatAdd(MatMul(sy_xmat_val, sy_beta_val), sy_e_val), evaluate=False)
+```
+
+In symbols:
+
+$$
+\yvec = \Xmat \bvec + \evec
+$$
+
+Because of the way that matrix multiplication works, this again gives us the
+intended result:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+Eq(sy_y_val, sy_xmat_val @ sy_beta_val + sy_e_val, evaluate=False)
+```
+
+We write *matrix multiplication* in Numpy as `@`:
+
+```{python}
+# Confirm that y is close as dammit to X @ B + e
+assert np.allclose(y, X @ B + e)
+```
+
+We still haven’t found our best fitting line. But before we go further, it
+might be clear that we can easily add a new predictor here.
+
+
+## Multiple regression
+
+We might also believe that prestige increases with the education level associated with that profession.
+
+Let us add education level as another predictor.
+
+```{python}
+education = df['education']
+```
+
+Now rename the `income` predictor vector from $\xvec$ to
+$\xvec_1$.
+
+```{python}
+# income (our previous x) is the first column we will use to predict.
+x_1 = income
+```
+
+Of course $\xvec_1$ has 15 values $x_{1, 1}..x_{1, 15}$. Call the `education`
+predictor vector $\xvec_2$.
+
+```{python}
+# education is the second column we use to predict
+x_2 = education
+```
+
+Call the slope for `income` $b_1$ (slope for $\xvec_1$). Call the slope for
+education $b_2$ (slope for $\xvec_2$). Our model is:
+
+$$
+y_i = b_1 x_{1, i} + b_2 x_{2, i} + c + e_i
+$$
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+sy_b_1, sy_b_2 = symbols('b_1, b_2')
+sy_x_1_ind = IndexedBase("x_1,")
+sy_x_1_val = Matrix([sy_x_1_ind[i] for i in vector_indices])
+sy_x_2_ind = IndexedBase("x_2,")
+sy_x_2_val = Matrix([sy_x_2_ind[i] for i in vector_indices])
+Eq(sy_y_val, MatAdd(MatMul(sy_b_1, sy_x_1_val), MatMul(sy_b_2, sy_x_2_val), sy_c_mat, sy_e_val), evaluate=False)
+```
+
+In this model $\Xmat$ has three columns ($\xvec_1$, $\xvec_2$ and ones), and
+the $\bvec$ vector has three values $b_1, b_2, c$. This gives the same matrix
+formulation, with our new $\Xmat$ and $\bvec$: $\yvec = \Xmat \bvec + \evec$.
+
+This is a *linear* model because our model says that the data $y_i$ comes
+from the *sum* of some components ($b_1 x_{1, i}, b_2 x_{2, i}, c, e_i$).
+
+We can keep doing this by adding more and more regressors. In general, a linear
+model with $p$ predictors looks like this:
+
+$$
+y_i = b_1 x_{1, i} + b_2 x_{2, i} + ... b_p x_{p, i} + e_i
+$$
+
+In the case of the models above, the final predictor $\xvec_p$ would be a
+column of ones, to express the intercept in the model.
+
+Any model of the form above can still be phrased in the matrix form:
+
+$$
+\yvec = \Xmat \bvec + \evec
+$$
+
+where:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+sy_xmat3_val = Matrix.hstack(sy_x_1_val, sy_x_2_val, sy_o_val)
+sy_Xmat = symbols(r'\boldsymbol{X}')
+Eq(sy_Xmat, sy_xmat3_val, evaluate=False)
+```
+
+In code in our case:
+
+```{python}
+# Design X in values
+X_3_cols = np.stack([x_1, x_2, o], axis=1)
+X_3_cols
+```
+
+In symbols:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+sy_beta2_val = Matrix([sy_b_1, sy_b_2, sy_c])
+Eq(sy_y_val, MatAdd(MatMul(sy_xmat3_val, sy_beta2_val), sy_e_val), evaluate=False)
+```
+
+As we were hoping, this evaluates to:
+
+```{python tags=c("hide-input")}
+# Ignore this cell.
+Eq(sy_y_val, sy_xmat3_val @ sy_beta2_val + sy_e_val, evaluate=False)
+```
+
+### Population, sample, estimate
+
+
+$\newcommand{\bhat}{\hat{\bvec}} \newcommand{\yhat}{\hat{\yvec}}$
+Our professions and their prestige scores are a *sample* from the
+population of all professions’ prestige scores. The parameters
+$\bvec$ are the parameters that fit the design $\Xmat$ to
+the *population* scores. We only have a sample from this population, so
+we cannot get the true population $\bvec$ vector, we can only
+*estimate* $\bvec$ from our sample. We will write this sample
+estimate as $\bhat$ to distinguish it from the true population
+parameters $\bvec$.
+
+
+## Solving the model with matrix algebra
+
+
+The reason to formulate our problem with matrices is so we can use some
+basic matrix algebra to estimate the “best” line.
+
+Let’s assume that we want an estimate for the line parameters (intercept
+and slope) that gives the smallest “distance” between the estimated
+values (predicted from the line), and the actual values (the data).
+
+We’ll define ‘distance’ as the squared difference of the predicted value from
+the actual value. These are the squared error terms $e_1^2, e_2^2 ... e_{n}^2$,
+where $n$ is the number of observations; 15 in our case.
+
+As a reminder: our model is:
+
+$$
+\yvec = \Xmat \bvec + \evec
+$$
+
+Where $\yvec$ is the data vector $y_1, y_2, ... y_n$,
+$\Xmat$ is the design matrix of shape $n, p$, $\bvec$
+is the parameter vector, $b_1, b_2 ... b_p$, and $\evec$ is
+the error vector giving errors for each observation
+$\epsilon_1, \epsilon_2 ... \epsilon_n$.
+
+Each column of $\Xmat$ is a regressor vector, so $\Xmat$ can
+be thought of as the column concatenation of $p$ vectors
+$\xvec_1, \xvec_2 ... \xvec_p$, where $\xvec_1$ is the first
+regressor *vector*, and so on.
+
+In our case, we want an estimate $\bhat$ for the vector
+$\bvec$ such that the errors $\evec = \yvec - \Xmat \bhat$
+have the smallest sum of squares $\sum_{i=1}^n{e_i^2}$.
+$\sum_{i=1}^n{e_i^2}$ is called the *residual sum of squares*.
+
+When we have our $\bhat$ estimate, then the prediction of the data
+from the estimate is given by $\Xmat \bhat$.
+
+We call this the predicted or estimated data, and write it as
+$\yhat$. The errors are then given by $\yvec - \yhat$.
+
+We might expect that, when we have found the right $\bhat$ then the errors
+will have nothing in them that can still be explained by the design matrix
+$\Xmat$. This is the same as saying that, when we have best prediction of the
+data ($\yhat = \Xmat \bhat$), the design matrix $\Xmat$ should be orthogonal
+to the remaining error ($\yvec - \yhat$).
+
+For those of you who have learned [about
+vectors](http://matthew-brett.github.io/teaching/on_vectors.html) in
+mathematics, you may remember that we say that two vectors are *orthogonal* if
+they have a *dot product* of zero.
+
+If the *design* is orthogonal to the errors, then $\Xmat^T \evec$ should be a
+vector of zeros.
+
+If that is the case then we can multiply $\yvec = \Xmat \bhat + \evec$ through
+by $\Xmat^T$:
+
+$$
+\Xmat^T \yvec = \Xmat^T \Xmat \bhat + \Xmat^T \evec
+$$
+
+The last term now disappears because it is zero and:
+
+$$
+\Xmat^T \yvec = \Xmat^T \Xmat \bhat
+$$
+
+If $\Xmat^T \Xmat$ is invertible (has a matrix inverse
+$(\Xmat^T \Xmat)^{-1}$) then there is a unique solution:
+
+$$
+\bhat = (\Xmat^T \Xmat)^{-1} \Xmat^T \yvec
+$$
+
+It turns out that, if $\Xmat^T \Xmat$ is not invertible, there are an infinite
+number of solutions, and we have to choose one solution, taking into account
+that the parameters $\bhat$ will depend on which solution we chose. The
+*pseudoinverse* operator gives us one particular solution. If $\bf{A}^+$ is the
+pseudoinverse of matrix $\bf{A}$ then the general solution for $\bhat$, even
+when $\Xmat^T \Xmat$ is not invertible, is:
+
+$$
+\bhat = \Xmat^+ \yvec
+$$
+
+Using this matrix algebra, what line do we estimate for `prestige`
+and `income`?
+
+```{python}
+X = np.column_stack((income, np.ones(n)))
+X
+```
+
+```{python}
+# Use the pseudoinverse to get estimated B
+B = npl.pinv(X) @ prestige
+B
+```
+
+```{python}
+# Plot the data
+plt.plot(income, prestige, '+')
+```
+
+```{python}
+best_slope = B[0]
+best_intercept = B[1]
+best_predictions = best_intercept + best_slope * income
+```
+
+```{python}
+# Plot the new prediction
+plt.plot(income, prestige, '+', label='Actual data')
+plt.plot(income, best_predictions, 'ro', label='Best predictions')
+plt.xlabel('Income')
+plt.ylabel('Prestige score')
+plt.title('Income vs Prestige with best line')
+plt.legend();
+```
+
+Our claim was that this estimate for slope and intercept minimize the sum (and
+therefore mean) of squared error:
+
+```{python}
+fitted = X @ B
+errors = prestige - fitted
+print(np.sum(errors ** 2))
+```
+
+Is this sum of squared errors smaller than our earlier guess of an intercept of
+10 and a slope of 0.9?
+
+```{python}
+fitted = X @ [0.9, 10]
+errors = prestige - fitted
+print(np.sum(errors ** 2))
+```
+
+## Displaying the design matrix as an image
+
+We can show the design as an image, by scaling the values with columns.
+
+We scale within columns because we care more about seeing variation
+within the regressor than between regressors. For example, if we have a
+regressor varying between 0 and 1, and another between 0 and 1000,
+without scaling, the column with the larger numbers will swamp the
+variation in the column with the smaller numbers.
+
+```{python}
+def scale_design_mtx(X):
+    """utility to scale the design matrix for display
+
+    This scales the columns to their own range so we can see the variations
+    across the column for all the columns, regardless of the scaling of the
+    column.
+    """
+    mi, ma = np.min(X, axis=0), np.max(X, axis=0)
+    # Vector that is True for columns where values are not
+    # all almost equal to each other
+    col_neq = (ma - mi) > 1.e-8
+    Xs = np.ones_like(X)
+    # Leave columns with same value throughout with 1s
+    # Scale other columns to min, max in column
+    mi = mi[col_neq]
+    ma = ma[col_neq]
+    Xs[:,col_neq] = (X[:,col_neq] - mi)/(ma - mi)
+    return Xs
+```
+
+Then we can display the scaled design with a title and some default image
+display parameters, to see our design at a glance.
+
+```{python}
+plt.imshow(scale_design_mtx(X), cmap='gray')
+plt.title('Simple regression model');
+```

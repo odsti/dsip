@@ -1,0 +1,1282 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Classes and inheritance &#8212; Data Science in Practice</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'classes_inheritance';</script>
+    <link rel="canonical" href="https://lisds.github.io/dsip/classes_inheritance.html" />
+    <link rel="icon" href="_static/dsfe_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/dsfe_logo.png" class="logo__image only-light" alt="Data Science in Practice - Home"/>
+    <script>document.write(`<img src="_static/dsfe_logo.png" class="logo__image only-dark" alt="Data Science in Practice - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Coding background</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="assert.html">Using <code class="docutils literal notranslate"><span class="pre">assert</span></code> for testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arrays_and_images.html">Arrays as images, images as arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_and_argmin.html">Where and argmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_2d.html">Where in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_for_optimize.html">2D arrays, images, optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pathlib.html">Using the <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dictionaries.html">Dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pandas_and_dicts.html">Pandas and dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lambda_functions.html">Lambda functions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reading formulae</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="on_vectors.html">Vectors and dot products</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_vectors.html">Numpy, arrays, and vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algebra_of_sums.html">Some algebra with summation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_notation.html">Notation for linear regression models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector_projection.html">Vector projection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_introduction.html">Introducing principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_dimension_reduction.html">Dimension reduction with Principal Component Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intermediate regression</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_multiple_predictors.html">Linear regression notation for models with multiple predictors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epl_modeling.html">Attack or defense?  An example of multiple regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression_categorical_predictors.html">Categorical predictors in linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple_predictors_statistical_adjustment.html">Statistical Adjustment in Multi-predictor Linear Regression Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logistic_regression_cross_validation.html">Multiple Logistic Regression, Model Selection and Cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cost_functions.html">Fitting models with different cost functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_notation.html">Expressing the linear model with matrices</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Classification</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="naive_bayes.html">Naive Bayes classifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k_means.html">k-means clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Working with data</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="data_work.html">The problem with data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing on your computer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the-problem-with-notebooks.html">The joys and sorrows of notebooks</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/lisds/dsip/main?urlpath=lab/tree/classes_inheritance.Rmd" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://ds.lis.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A//github.com/lisds/dsip&urlpath=lab/tree/dsip/classes_inheritance.Rmd&branch=main" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on JupyterHub"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="JupyterHub logo" src="_static/images/logo_jupyterhub.svg">
+  </span>
+<span class="btn__text-container">JupyterHub</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/edit/main/classes_inheritance.Rmd" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/issues/new?title=Issue%20on%20page%20%2Fclasses_inheritance.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/classes_inheritance.Rmd" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.Rmd</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Classes and inheritance</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extending-behavior-with-inheritance">Extending behavior with inheritance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extending-behavior-with-multiple-inheritance">Extending behavior with multiple inheritance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objects-attributes-and-initialization">Objects, attributes, and initialization</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="classes-and-inheritance">
+<h1>Classes and inheritance<a class="headerlink" href="#classes-and-inheritance" title="Link to this heading">#</a></h1>
+<p>Classes are everywhere in Python.  Every value in Python belongs to a class.  Put another way, every value has a <em>type</em> - also known as a <em>class</em>.   To say it again, the <em>type</em> of a value is also its <em>class</em>.</p>
+<p>Let’s start with very basic type — <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+<p>Here’s a value of type (class) str:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;ten&#39;</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>str
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">type</span></code> function asks Python to display the <em>class</em> of the value.  We’re now going to start using the term <em>object</em> for the value - but we will use <em>object</em> and <em>value</em> interchangeably.</p>
+<p>The class defines the default behavior of the object.  For example, the  class defines the things that are attached to the object by default.  There can be <em>data</em> attached to the object (known as <em>attributes</em>), and <em>functions</em> attached to the object (known as <em>methods</em>).</p>
+<p>In fact, the <code class="docutils literal notranslate"><span class="pre">str</span></code> type defines no attributes (data) for the string, it only defines functions (methods).  An example method is <code class="docutils literal notranslate"><span class="pre">upper</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the function &quot;upper&quot; attached to (.) the value &quot;a&quot;,</span>
+<span class="c1"># of type &quot;str&quot;.</span>
+<span class="n">a</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;TEN&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Python value <code class="docutils literal notranslate"><span class="pre">str</span></code> is a <code class="docutils literal notranslate"><span class="pre">type</span></code> (a class).  That is, it is a thing that provides the defines other things.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type
+</pre></div>
+</div>
+</div>
+</div>
+<p>Every value (object) in Python has a corresponding definition (type).  This is the same as saying that every object (value) in Python has a class (type).</p>
+<p>You can use the type (class) to create value of that type.  You have already seen this for strings:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use str to create a new value of type str</span>
+<span class="nb">str</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;10000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Why do you need to know about types (classes)?   Because you can define and use your own classes to extend the behavior of existing types, or make new types.</p>
+<section id="extending-behavior-with-inheritance">
+<h2>Extending behavior with inheritance<a class="headerlink" href="#extending-behavior-with-inheritance" title="Link to this heading">#</a></h2>
+<p>As you know, you can create strings (objects of type <code class="docutils literal notranslate"><span class="pre">str</span></code>) using the <code class="docutils literal notranslate"><span class="pre">str</span></code> type:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;10000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>str
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s say we would like to be able to format the string version of the number nicely with thousand separators.   So, we’d like to be able to do something like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>and get the result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;10_000&#39;</span>
+</pre></div>
+</div>
+<p>We can’t do that at the moment, because the <code class="docutils literal notranslate"><span class="pre">str</span></code> type does not define the <code class="docutils literal notranslate"><span class="pre">thousands_separated</span></code> method.</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">n</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">()</span>
+
+<span class="ne">AttributeError</span>: &#39;str&#39; object has no attribute &#39;thousands_separated&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Maybe the first step would be to make a <em>function</em> that does this work, but accepting a string as argument, and returning a string with the thousands separators added.  Here is such a function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">thou_sep</span><span class="p">(</span><span class="n">in_str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return `in_str` with thousands separators.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_str : str</span>
+<span class="sd">        String representing integer</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out_str : str</span>
+<span class="sd">        String with thousands separators inserted.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError: if `in_str` does not represent an integer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check we can make the current string into</span>
+    <span class="c1"># an integer without error. That means we crash here, if</span>
+    <span class="c1"># this isn&#39;t an integer.</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">in_str</span><span class="p">)</span>
+    <span class="c1"># Make a list of characters that will form our new string.</span>
+    <span class="n">characters</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">in_str</span><span class="p">)):</span>
+        <span class="c1"># Do we need to add a separator?</span>
+        <span class="k">if</span> <span class="n">pos</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># We never start with a separator.</span>
+            <span class="c1"># How many characters remaining until end</span>
+            <span class="c1"># of string?</span>
+            <span class="n">n_from_end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_str</span><span class="p">)</span> <span class="o">-</span> <span class="n">pos</span>
+            <span class="k">if</span> <span class="n">n_from_end</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Divisible by 3?</span>
+                <span class="n">characters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>  <span class="c1"># Then add separator.</span>
+        <span class="c1"># Always append current character.</span>
+        <span class="n">characters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">in_str</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span>
+    <span class="c1"># Re-assemble string from characters in list.</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">characters</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Some examples:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;100 with separators:&#39;</span><span class="p">,</span> <span class="n">thou_sep</span><span class="p">(</span><span class="s1">&#39;100&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;1000 with separators:&#39;</span><span class="p">,</span> <span class="n">thou_sep</span><span class="p">(</span><span class="s1">&#39;1000&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;10000 with separators:&#39;</span><span class="p">,</span> <span class="n">thou_sep</span><span class="p">(</span><span class="s1">&#39;10000&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100 with separators: 100
+1000 with separators: 1_000
+10000 with separators: 10_000
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice we get an error if the string we send cannot be made into an integer:</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thou_sep</span><span class="p">(</span><span class="s1">&#39;A string that does not represent an integer&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">thou_sep</span><span class="p">(</span><span class="s1">&#39;A string that does not represent an integer&#39;</span><span class="p">)</span>
+
+<span class="nn">Cell In[8], line 21,</span> in <span class="ni">thou_sep</span><span class="nt">(in_str)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span><span class="w"> </span><span class="sd">&quot;&quot;&quot; Return `in_str` with thousands separators.</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span><span class="sd"> </span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span><span class="sd"> Parameters</span>
+<span class="sd">   (...)     16 ValueError: if `in_str` does not represent an integer.</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="c1"># Check we can make the current string into</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="c1"># an integer without error. That means we crash here, if</span>
+<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="c1"># this isn&#39;t an integer.</span>
+<span class="ne">---&gt; </span><span class="mi">21</span> <span class="nb">int</span><span class="p">(</span><span class="n">in_str</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="c1"># Make a list of characters that will form our new string.</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="n">characters</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="ne">ValueError</span>: invalid literal for int() with base 10: &#39;A string that does not represent an integer&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can get the behavior we want by calling the function on a string, but
+perhaps we would like to make a version of <code class="docutils literal notranslate"><span class="pre">str</span></code> that has
+a <code class="docutils literal notranslate"><span class="pre">thousands_separated</span></code> method.</p>
+<p>To do this, we can <em>extend</em> the <code class="docutils literal notranslate"><span class="pre">str</span></code> type by making a new <code class="docutils literal notranslate"><span class="pre">class</span></code> that
+<em>inherits</em> from <code class="docutils literal notranslate"><span class="pre">str</span></code> like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a new class (type) called NiceStr</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NiceStr</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>  <span class="c1"># Inherit from the str type</span>
+
+    <span class="c1"># Define a new function (method) to operate on</span>
+    <span class="c1"># NiceStr values.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thousands_separated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># The &quot;self&quot; argument is the string we are</span>
+        <span class="c1"># attached to.  More below.</span>
+        <span class="k">return</span> <span class="n">thou_sep</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice the <code class="docutils literal notranslate"><span class="pre">self</span></code> argument to the method.  <code class="docutils literal notranslate"><span class="pre">self</span></code> is an extra magic argument that Python passes to the method, that contains the object to which the method refers.  We will come back to that in a bit.  For now, let’s just use the method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_n</span> <span class="o">=</span> <span class="n">NiceStr</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">my_n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;10000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">my_n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>__main__.NiceStr
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_n</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;10_000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;100 with separators:&#39;</span><span class="p">,</span> <span class="n">NiceStr</span><span class="p">(</span><span class="s1">&#39;100&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;1000 with separators:&#39;</span><span class="p">,</span> <span class="n">NiceStr</span><span class="p">(</span><span class="s1">&#39;1000&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;10000000 with separators:&#39;</span><span class="p">,</span> <span class="n">NiceStr</span><span class="p">(</span><span class="s1">&#39;10000000&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100 with separators: 100
+1000 with separators: 1_000
+10000000 with separators: 10_000_000
+</pre></div>
+</div>
+</div>
+</div>
+<p>We mentioned the <code class="docutils literal notranslate"><span class="pre">self</span></code> in the <code class="docutils literal notranslate"><span class="pre">thousands_separated</span></code> method.  This is a piece
+of Python magic.  When Python sees <code class="docutils literal notranslate"><span class="pre">my_n.thousands_separated()</span></code> it will:</p>
+<ul class="simple">
+<li><p>Identify the class (type) of <code class="docutils literal notranslate"><span class="pre">my_n</span></code> - to give <code class="docutils literal notranslate"><span class="pre">NiceStr</span></code>.</p></li>
+<li><p>Translate the call to <code class="docutils literal notranslate"><span class="pre">NiceStr.thousands_separated(my_n)</span></code>.</p></li>
+</ul>
+<p>This means that Python translates this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_n</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;10_000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>to this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NiceStr</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">(</span><span class="n">my_n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;10_000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Because of this translation, nearly all method definitions start with the
+<code class="docutils literal notranslate"><span class="pre">self</span></code> argument, meaning, the object to which the method is attached.</p>
+<p>Notice that our new class (type) <em>extends</em> the <code class="docutils literal notranslate"><span class="pre">str</span></code> type, by inheriting from
+it.  The line <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">NiceStr(str):</span></code> says that the new <code class="docutils literal notranslate"><span class="pre">NiceStr</span></code> type has all
+the behavior of <code class="docutils literal notranslate"><span class="pre">str</span></code> to start with.  If we define a new method in the class
+<em>body</em> (the indented code after the <code class="docutils literal notranslate"><span class="pre">class</span></code> line), the new class has all the
+methods <code class="docutils literal notranslate"><span class="pre">str</span></code>, as well as the new method.</p>
+<p>The way to say this is that <code class="docutils literal notranslate"><span class="pre">NiceStr</span></code> <em>inherits</em> from <code class="docutils literal notranslate"><span class="pre">str</span></code>, and <em>extends</em>
+<code class="docutils literal notranslate"><span class="pre">str</span></code> by adding the method <code class="docutils literal notranslate"><span class="pre">thousands_separated</span></code>.</p>
+</section>
+<section id="extending-behavior-with-multiple-inheritance">
+<h2>Extending behavior with multiple inheritance<a class="headerlink" href="#extending-behavior-with-multiple-inheritance" title="Link to this heading">#</a></h2>
+<p>Another way to extend the behavior of a type (class), is to use <em>multiple
+inheritance</em>.</p>
+<p>As the name implies, multiple inheritance means that a new <code class="docutils literal notranslate"><span class="pre">class</span></code> (type)
+inherits from more than one other class.</p>
+<p>For example, if a class inherits from two classes, then the new class gets the
+methods and attributes from <em>both</em>.</p>
+<p>Let’s say for example, that we wanted to add a couple of methods to one more
+new classes.</p>
+<p>We will use some silly methods for now.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inherit from the most basic Python class, &quot;object&quot;.</span>
+<span class="c1"># &quot;object&quot; has no methods or attributes.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SillyMessages</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">message1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This is a the first silly message&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">message2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This is a the first silly message&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As we create a new <code class="docutils literal notranslate"><span class="pre">NiceStr</span></code> object with the class, we can make a new
+<code class="docutils literal notranslate"><span class="pre">SillyMessages</span></code> object with the class:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">message_thing</span> <span class="o">=</span> <span class="n">SillyMessages</span><span class="p">()</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">message_thing</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>__main__.SillyMessages
+</pre></div>
+</div>
+</div>
+</div>
+<p>We call the <code class="docutils literal notranslate"><span class="pre">message1</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">message_thing</span><span class="o">.</span><span class="n">message1</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This is a the first silly message
+</pre></div>
+</div>
+</div>
+</div>
+<p>Remember, Python will translate that to:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SillyMessages</span><span class="o">.</span><span class="n">message1</span><span class="p">(</span><span class="n">message_thing</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This is a the first silly message
+</pre></div>
+</div>
+</div>
+</div>
+<p>We call the <code class="docutils literal notranslate"><span class="pre">message2</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">message_thing</span><span class="o">.</span><span class="n">message2</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This is a the first silly message
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can use this class to add the silly behavior to a new class, by inheriting
+<em>both</em> from the class we are interested in - such as <code class="docutils literal notranslate"><span class="pre">str</span></code> <em>and</em> from the
+<code class="docutils literal notranslate"><span class="pre">SillyMessages</span></code> class.  This gives the new class the methods from <em>both</em>
+classes.</p>
+<p>In this case, we can call the <code class="docutils literal notranslate"><span class="pre">SillyMessages</span></code> a <em>mixin</em> class.  This is just
+a term for a class that adds some behavior to another class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inherit both from str and from SillyMessages</span>
+<span class="c1"># We are using SillyMessages as a mixin class here.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StrWithMessages</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">SillyMessages</span><span class="p">):</span>
+
+    <span class="c1"># For good measure, add another method to our new class.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">another_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This is a silly messages string type&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Create the new object with the multiple inheritance class:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">str_messages</span> <span class="o">=</span> <span class="n">StrWithMessages</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">str_messages</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>__main__.StrWithMessages
+</pre></div>
+</div>
+</div>
+</div>
+<p>Displaying the value uses the usual <code class="docutils literal notranslate"><span class="pre">str</span></code> behavior, because <code class="docutils literal notranslate"><span class="pre">StrWithMessages</span></code>
+inherits from <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">str_messages</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;10&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The new value has the methods from <code class="docutils literal notranslate"><span class="pre">SillyMessages</span></code>, via inheritance:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inherited from SillyMessages</span>
+<span class="n">str_messages</span><span class="o">.</span><span class="n">message1</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This is a the first silly message
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that we didn’t inherit from <code class="docutils literal notranslate"><span class="pre">ThouSep</span></code> here, and it was <code class="docutils literal notranslate"><span class="pre">ThouSep</span></code> that
+had the <code class="docutils literal notranslate"><span class="pre">thousands_separated</span></code> method, so we do not have that method in our new
+class:</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">str_messages</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">27</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">str_messages</span><span class="o">.</span><span class="n">thousands_separated</span><span class="p">()</span>
+
+<span class="ne">AttributeError</span>: &#39;StrWithMessages&#39; object has no attribute &#39;thousands_separated&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="objects-attributes-and-initialization">
+<h2>Objects, attributes, and initialization<a class="headerlink" href="#objects-attributes-and-initialization" title="Link to this heading">#</a></h2>
+<p>Consider the following new class, with the method <code class="docutils literal notranslate"><span class="pre">print_information</span></code>.  As you’ll see, there is a problem with this method, that we will need to fix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_information</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I am operating on&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I will print the &#39;information&#39; attribute of&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">information</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can make a value of this type (class), with no problem.</p>
+<p>The technical term for making a value with a class is <em>instantiating</em> the
+class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate the class, using the class name, as above.</span>
+<span class="n">my_class_value</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">my_class_value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>__main__.MyClass
+</pre></div>
+</div>
+</div>
+</div>
+<p>There’s a problem in the <code class="docutils literal notranslate"><span class="pre">print_information</span></code> method that we need to fix.   Have a look at that method above; see if you can define the problem, and predict what will happen below.</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_class_value</span><span class="o">.</span><span class="n">print_information</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am operating on &lt;__main__.MyClass object at 0x7ff9fc983f20&gt;
+I will print the &#39;information&#39; attribute of &lt;__main__.MyClass object at 0x7ff9fc983f20&gt;
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">30</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">my_class_value</span><span class="o">.</span><span class="n">print_information</span><span class="p">()</span>
+
+<span class="nn">Cell In[28], line 6,</span> in <span class="ni">MyClass.print_information</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I am operating on&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I will print the &#39;information&#39; attribute of&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">6</span> <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">information</span><span class="p">)</span>
+
+<span class="ne">AttributeError</span>: &#39;MyClass&#39; object has no attribute &#39;information&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>You may have seen that the last line of the <code class="docutils literal notranslate"><span class="pre">print_information</span></code> method prints the value of an <code class="docutils literal notranslate"><span class="pre">information</span></code> attribute.  An attribute is some data (a value) attached to the value.   However, the value <code class="docutils literal notranslate"><span class="pre">my_class</span></code> does not have an attached <code class="docutils literal notranslate"><span class="pre">information</span></code> value, so the method gives an error.</p>
+<p>The standard way to attach a value to an object is to pass that value in when
+you create the object.</p>
+<p>Remember, you create the object by calling the class, like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_class_value</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>By calling <code class="docutils literal notranslate"><span class="pre">MyClass</span></code> here (<code class="docutils literal notranslate"><span class="pre">MyClass()</span></code>), we are using <code class="docutils literal notranslate"><span class="pre">MyClass</span></code> as a <em>class
+constructor</em>; the call creates (constructs) an instance (object) of the class.</p>
+<p>As with other call expressions, we can also pass arguments to the class
+constructor.  But, so far, we don’t have any way for the class to know what to
+do with such arguments.</p>
+<p>And in fact, to deal with this common case, where we want to do some work in building (constructing) the object, Python has a rule to say that it will look for a method with the special name <code class="docutils literal notranslate"><span class="pre">__init__</span></code> when it makes (constructs) the object.</p>
+<p>Let’s start by making such an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method, that does nothing but print a message:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I can do some work to change the object here&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>See that Python calls this <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method when it constructs the object:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I can do some work to change the object here
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can use this <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method to modify the object.  In particular, we can, for example, send arguments to the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method, by sending arguments to the class constructor.  For example, here we define <code class="docutils literal notranslate"><span class="pre">MyClass2</span></code> with an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method that accepts two parameters.  The first is <code class="docutils literal notranslate"><span class="pre">self</span></code>, and this is just an initial starting object that Python has made for us, and provides when it calls <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.  The second is a value we’ve named <code class="docutils literal notranslate"><span class="pre">information</span></code>, and that we will attach to the new object (in <code class="docutils literal notranslate"><span class="pre">self</span></code>).  Then when we call the class constructor <code class="docutils literal notranslate"><span class="pre">MyClass2</span></code>, we need to pass a value for <code class="docutils literal notranslate"><span class="pre">information</span></code>, so Python can pass it to the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">information</span><span class="p">):</span>
+        <span class="c1"># Attach the information value to the new `self` object.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">information</span> <span class="o">=</span> <span class="n">information</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_information</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I am operating on&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I will print the &#39;information&#39; attribute of&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">information</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If I try to construct an object of type <code class="docutils literal notranslate"><span class="pre">MyClass2</span></code> without passing the information value, I get an error:</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The MyClass2() constructor call now needs an argument, because of the</span>
+<span class="c1"># __init__ method.</span>
+<span class="n">my_class2_object</span> <span class="o">=</span> <span class="n">MyClass2</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">35</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># The MyClass2() constructor call now needs an argument, because of the</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="c1"># __init__ method.</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">my_class2_object</span> <span class="o">=</span> <span class="n">MyClass2</span><span class="p">()</span>
+
+<span class="ne">TypeError</span>: MyClass2.__init__() missing 1 required positional argument: &#39;information&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>So, let’s provide the <code class="docutils literal notranslate"><span class="pre">information</span></code> value:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_class2_object</span> <span class="o">=</span> <span class="n">MyClass2</span><span class="p">(</span><span class="s1">&#39;any kind of value&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now the object <em>does</em> have an information attribute:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_class2_object</span><span class="o">.</span><span class="n">information</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;any kind of value&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Therefore, the <code class="docutils literal notranslate"><span class="pre">print_information</span></code> method now works without error:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_class2_object</span><span class="o">.</span><span class="n">print_information</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am operating on &lt;__main__.MyClass2 object at 0x7ff9fca19d30&gt;
+I will print the &#39;information&#39; attribute of &lt;__main__.MyClass2 object at 0x7ff9fca19d30&gt;
+any kind of value
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "lisds/dsip",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extending-behavior-with-inheritance">Extending behavior with inheritance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extending-behavior-with-multiple-inheritance">Extending behavior with multiple inheritance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objects-attributes-and-initialization">Objects, attributes, and initialization</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matthew Brett and Peter Rush
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

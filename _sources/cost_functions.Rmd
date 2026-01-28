@@ -1,0 +1,849 @@
+---
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all,-language_info
+    split_at_heading: true
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.16.0
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  orphan: true
+---
+
+# Fitting models with different cost functions
+
+We also get on to cross-validation.
+
+```{python}
+import numpy as np
+np.set_printoptions(suppress=True)
+from scipy.optimize import minimize
+import pandas as pd
+# Enable copy_on_write for Pandas<3
+if int(pd.__version__.split('.')[0]) < 3:
+    pd.set_option('mode.copy_on_write', True)
+import statsmodels.formula.api as smf
+import sklearn.linear_model as sklm
+import sklearn.metrics as skmetrics
+```
+
+```{python}
+df = pd.read_csv('data/rate_my_course.csv')
+df
+```
+
+Fetch some columns of interest:
+
+```{python}
+# This will be our y (the variable we predict).
+helpfulness = df['Helpfulness']
+# One of both of these will be our X (the predictors).
+clarity_easiness = df[['Clarity', 'Easiness']]
+```
+
+Fit the model with Statsmodels.
+
+```{python}
+sm_model = smf.ols('Helpfulness ~ Clarity + Easiness', data=df)
+sm_fit = sm_model.fit()
+sm_fit.summary()
+```
+
+Fit the same model with Scikit-learn.
+
+```{python}
+sk_model = sklm.LinearRegression()
+sk_fit = sk_model.fit(clarity_easiness, helpfulness)
+sk_fit
+```
+
+The coefficients (the slopes for the regressors):
+
+```{python}
+sk_fit.coef_
+```
+
+The intercept:
+
+```{python}
+sk_fit.intercept_
+```
+
+Compare the parameters to Statsmodels:
+
+
+```{python}
+sm_fit.params
+```
+
+## The fitted values and Scikit-learn
+
+The values predicted by the (Sklearn) model:
+
+```{python}
+y_hat = sk_fit.predict(clarity_easiness)
+y_hat
+```
+
+Compare the fitted ($\hat{y}$) values to those from Statsmodels:
+
+```{python}
+sm_fit.predict() - y_hat
+```
+
+Here's a general check that the predictions are all the same (or close enough within computational precision):
+
+```{python}
+assert np.allclose(sm_fit.predict(), y_hat)
+```
+
+We assemble Sklearn's coefficients and intercept into a single list,
+with the intercept last.
+
+```{python}
+params = list(sk_fit.coef_) + [sk_fit.intercept_]
+params
+```
+
+If we just want all but the last parameter (all the coefficients, but not the intercept):
+
+```{python}
+# All parameters but the last (all but the intercept parameter).
+params[:-1]
+```
+
+We could also get the parameters from Statsmodels, but we'd have to rearrange them, because Statsmodels puts the intercept first rather than last:
+
+```{python}
+sm_fit.params.iloc[[1, 2, 0]]
+```
+
+Write a function to compute the fitted values given the parameters:
+
+
+```{python}
+def calc_fitted(params, X):
+    """ Calculate fitted values from design X and parameters
+
+    Parameters
+    ----------
+    params : vector (1D array)
+        Vector of parameters, intercept is last parameter.
+    X : array
+        2D array with regressor columns.
+
+    Returns
+    -------
+    y_hat : vector
+        Vector of fitted values
+    """
+    X = np.array(X)
+    n, p = X.shape
+    y_hat = np.zeros(n)
+    for col_no, param in enumerate(params[:-1]):
+        y_hat = y_hat + param * X[:, col_no]  # Add contribution from this regressor.
+    y_hat = y_hat + params[-1]  # Add contribution from intercept.
+    return y_hat
+```
+
+Show that we get the same fitted values from our function as we got from
+the `predict` method of Sklearn:
+
+```{python}
+our_y_hat = calc_fitted(params, clarity_easiness)
+assert np.allclose(our_y_hat, y_hat)
+```
+
+Calculate the error vector and then calculate the sum of squared error:
+
+```{python}
+e = helpfulness - our_y_hat
+np.sum(e ** 2)
+```
+
+Make a function to calculate sum of squared error:
+
+```{python}
+def sos(params, X, y):
+    """ Sum of squared error for `params` given model `X` and data `y`.
+    """
+    y_hat = calc_fitted(params, X)
+    e = y - y_hat  # residuals
+    return np.sum(e ** 2)
+```
+
+Check that we get the same answer from the function as we got from
+calculating above:
+
+```{python}
+sos(params, clarity_easiness, helpfulness)
+```
+
+Use `minimize` to find parameters minimizing the sum of squared error:
+
+```{python}
+min_res = minimize(sos, [0, 0, 0], args=(clarity_easiness, helpfulness))
+min_res
+```
+
+Yes, the parameters (coefficients and intercept) are the same as we got
+from Statsmodels and Sklearn:
+
+```{python}
+min_res.x
+```
+
+## A short diversion — writing the mean in symbols
+
+For notational convenience, give our `y` ("Helpfulness") vector the
+variable name `y`:
+
+```{python}
+y = helpfulness
+```
+
+This is the usual mean, on `y` (the 'Helpfulness" scores):
+
+```{python}
+np.mean(y)
+```
+
+The calculation is:
+
+```{python}
+n = len(y)
+np.sum(y) / n
+```
+
+Of course this is the same as:
+
+```{python}
+1 / n * np.sum(y)
+```
+
+In mathematical notation, we write this as:
+
+$$
+\bar{y} = \frac{1}{n} (y_1 + y_2 + ... + y_n) \\
+$$
+
+where $\bar{y}$ is the mean of the values in the vector $\vec{y}$.
+
+We could also write the operation of adding up the $y$ values with the
+$\sum$ notation:
+
+$$
+\sum_i y_i = (y_1 + y_2 + ... + y_n)
+$$
+
+Using the $\sum$ notation, we write the mean as:
+
+$$
+\bar{y} = \frac{1}{n} \sum_i y_i
+$$
+
+This notation is very similar to the equivalent code:
+
+```{python}
+1 / n * np.sum(y)
+```
+
+<!-- #region -->
+## The long and the short of $R^2$
+
+
+$R^2$ can also be called the [coefficient of
+determination](https://en.wikipedia.org/wiki/Coefficient_of_determination).
+
+Sklearn has an `r2_score` metric.
+<!-- #endregion -->
+
+```{python}
+skmetrics.r2_score(helpfulness, y_hat)
+```
+
+The Statsmodels `fit` object has an `rsquared` attribute with the $R^2$ value:
+
+```{python}
+sm_fit.rsquared
+```
+
+The formula for $R^2$ is:
+
+$$
+R^2 = 1 - {SS_{\rm resid}\over SS_{\rm total}}
+$$
+
+If $\hat{y}_i$ is the *fitted*
+value for observation $i$, then the residual error $e_i$ for observation
+$i$ is $y_i - \hat{y}_i$, and $SS_{\text{resid}}$ is the sum of
+squares of the residuals:
+
+$$
+SS_\text{resid}=\sum_i (y_i - \hat{y}_i)^2=\sum_i e_i^2\
+$$
+
+```{python}
+ss_resid = np.sum((y - y_hat) ** 2)
+ss_resid
+```
+
+As you saw above, we write the mean of the observed values $y$ as $\bar{y}$.
+
+The denominator for the standard $R^2$ statistic is the "total sum of squares" $SS_\text{tot}$, written as:
+
+$$
+SS_\text{total}=\sum_i (y_i - \bar{y})^2
+$$
+
+```{python}
+ss_total = np.sum((y - np.mean(y)) ** 2)
+ss_total
+```
+
+We can calculate $R^2$ by hand to show this gives the same answer as Sklearn and Statsmodels.
+
+```{python}
+# Calculate R2
+1 - ss_resid / ss_total
+```
+
+The by-hand calculation gives the same answer as Sklearn or Statsmodels.
+
+```{python}
+sm_fit.rsquared
+```
+
+### $R^2$ for another, reduced model
+
+You can think of the standard $R^2$ above as a measure of the improvement in fit for an expanded model (with the regressors included) compared to a reduced model (that only uses the mean).
+
+You can use the same idea to compare an expanded model to another reduced model.
+
+For example, we can fit a reduced model that is just "Clarity" without "Easiness".
+
+```{python}
+clarity_df = df[['Clarity']]
+reduced_fit = sklm.LinearRegression().fit(clarity_df, helpfulness)
+reduced_fit.coef_, reduced_fit.intercept_
+```
+
+Calculate $R^2$ for reduced model as compared to our full model.
+
+```{python}
+reduced_resid = helpfulness - reduced_fit.predict(clarity_df)
+ss_reduced_resid = (reduced_resid ** 2).sum()
+ss_reduced_resid
+```
+
+```{python}
+1 - ss_resid / ss_reduced_resid
+```
+
+## On weights, and a weighted mean
+
+You remember, from the discussion of the mean, above, that we can write
+the mean calculation as:
+
+$$
+\bar{y} = \frac{1}{n} \sum_i y_i
+$$
+
+In code:
+
+```{python}
+1 / n * np.sum(y)
+```
+
+Mathematically, because $p * (q + r) = p * q + p * r$ (the [distributive
+property](https://en.wikipedia.org/wiki/Distributive_property) of
+multiplication), we can also do the multiplication by $\frac{1}{n}$ *inside
+the brackets*, like this:
+
+$$
+\bar{y} = \frac{1}{n} y_1 +
+          \frac{1}{n} y_2 +
+          ...
+          \frac{1}{n} y_n
+$$
+
+With the $\sum$ notation, that would be:
+
+$$
+\bar{y} = \sum_i \frac{1}{n} y_i
+$$
+
+In code:
+
+```{python}
+np.sum(1 / n * y)
+```
+
+Think of this - the standard calculation of the mean - as giving each value in
+$y$ the same *weight* - of $\frac{1}{n}$:
+
+```{python}
+weights = np.ones(n) / n
+weights
+```
+
+```{python}
+np.sum(y * weights)
+```
+
+We can calculate weights to weight each "Helpfulness" value by the number of
+professors.  Maybe we would do this on the basis that larger number of
+professors may give more reliable values, and should therefore contribute
+relatively more to the mean.
+
+```{python}
+n_professors = df['Number of Professors']
+n_professors
+```
+
+```{python}
+total_n_professors = np.sum(n_professors)
+total_n_professors
+```
+
+Calculate the proportion of professors represented by each discipline:
+
+```{python}
+prop_professors_by_subject = n_professors / total_n_professors
+prop_professors_by_subject
+```
+
+Now we have divided each value by the sum of the values, to give the
+proportions, the proportions must add up to 1:
+
+```{python}
+np.sum(prop_professors_by_subject)
+```
+
+Calculate weighted mean, where the weights are the proportions of professors in the matching discipline:
+
+```{python}
+# Weighted mean of helpfulness (y), weighted by number of professors.
+np.sum(y * prop_professors_by_subject)
+```
+
+Numpy's version of same:
+
+```{python}
+np.average(y, weights=prop_professors_by_subject)
+```
+
+And in fact, Numpy will check whether the weights sum to 1, and if not, will automatically divide the weights by their sum, so we can get the same calculation with the raw numbers of professors:
+
+```{python}
+np.average(y, weights=n_professors)
+```
+
+## Fitting with weights
+
+Weighted regression differs from standard regression, only in weighting each
+*squared residual* $e^2_i = (y_i - \hat{y_i})^2$ by some weight for that
+observation — call this $w_i$.
+
+As we saw above in standard regression — AKA "ordinary least squares"
+regression, the cost function is the sum of squares of the residuals
+($SS_{resid}$):
+
+$$
+SS_\text{resid}=\sum_i (y_i - \hat{y}_i)^2 \\
+=\sum_i e_i^2
+$$
+
+In weighted regression we have a weight $w_i$ for each observation, and the cost function is:
+
+$$
+SS_\text{weighted_resid}=\sum_i w_i (y_i - \hat{y}_i)^2 \\
+=\sum_i w_i  e_i^2
+$$
+
+Also see [Wikipedia on weighted
+regression](https://en.wikipedia.org/wiki/Weighted_least_squares).
+
+
+First we show weighted regression in action, and then show how this cost function works in code, with `minimize`.
+
+Here we use Statsmodels to do weighted regression.
+
+```{python}
+sm_weighted_model = smf.wls('Helpfulness ~ Clarity + Easiness',
+                            weights=prop_professors_by_subject,
+                            data=df)
+sm_weighted_fit = sm_weighted_model.fit()
+sm_weighted_fit.summary()
+```
+
+To save some typing, and for notational convenience in code, call our
+two-regressor design `X`:
+
+```{python}
+X = clarity_easiness
+X
+```
+
+You can also do [weighted regression in
+Sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html), by passing weights to the `LinearRegression` `fit` method:
+
+```{python}
+sk_weighted = sklm.LinearRegression().fit(
+    X,  # clarity_easiness
+    y,  # Helpfulness
+    sample_weight=prop_professors_by_subject)
+sk_weighted
+```
+
+```{python}
+sk_weighted.coef_, sk_weighted.intercept_
+```
+
+The `minimize` cost function for weighted regression:
+
+```{python}
+def sos_weighted(params, X, y, weights):
+    """ Weighted least squares cost function
+    """
+    y_hat = calc_fitted(params, X)
+    e = y - y_hat  # Vector of residuals (errors)
+    e2 = e ** 2  # The vector of squared errors.
+    return np.sum(e2 * weights)
+```
+
+```{python}
+weighted_res = minimize(sos_weighted, [0, 0, 0], args=(X, y, prop_professors_by_subject))
+weighted_res
+```
+
+```{python}
+weighted_res.x
+```
+
+Notice these are the same (within very close limits) to the parameters we got from Statsmodels and Sklearn:
+
+```{python}
+sk_weighted.coef_, sk_weighted.intercept_
+```
+
+We can get `minimize` even closer by setting the `tol` value for `minimize` to be a very small number. `tol` specifies how small the difference has to be when making small changes in the parameters, before `minimize` accepts it is close enough to the right answer and stops.   Put another way, it specifies the precision of the estimates.
+
+In fact, to get really close, we also have to specify an (in this case) more accurate method for the optimization, rather than using the default.  We will use the `powell` method to do the search.
+
+```{python}
+weighted_res_precise = minimize(sos_weighted,
+                                [0, 0, 0],
+                                args=(X, y, prop_professors_by_subject),
+                                method='powell',
+                                tol=1e-10)  # 0.0000000001
+weighted_res_precise
+```
+
+```{python}
+weighted_res_precise.x
+```
+
+Notice that we got very close to the Sklearn result.
+
+```{python}
+sk_weighted.coef_, sk_weighted.intercept_
+```
+
+## Penalized regression
+
+Penalized regression is where you simultaneously minimize some cost related to the model (mis-)fit, and some cost related to the parameters of your model.
+
+### Ridge regression
+
+For example, in [ridge
+regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html),
+we try and minimize the sum of squared residuals _and_ the sum of squares
+of the parameters (except for from the intercept).
+
+```{python}
+sk_ridge = sklm.Ridge(alpha=1).fit(X, y)
+sk_ridge.coef_, sk_ridge.intercept_
+```
+
+Fit with the `minimize` cost function:
+
+```{python}
+def sos_ridge(params, X, y, alpha):
+    ss_resid = sos(params, X, y)  # Using our sos function.
+    return ss_resid + alpha * np.sum(params[:-1] ** 2)
+```
+
+Fit ridge regression with the `minimize` cost function:
+
+```{python}
+res_ridge = minimize(sos_ridge, [0, 0, 0], args=(X, y, 1.0),
+                     method='powell', tol=1e-10)
+res_ridge.x
+```
+
+
+### LASSO
+
+
+See the [Scikit-learn LASSO page](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html).
+
+
+As noted there, the cost function is:
+
+$$
+\frac{1}{ 2 * n } * ||y - Xw||^2_2 + alpha * ||w||_1
+$$
+
+$w$ refers to the vector of model parameters.
+
+This part of the equation:
+
+$$
+||y - Xw||^2_2
+$$
+
+is the sum of squares of the residuals, because the residuals are $y - Xw$
+(where $w$ are the parameters of the model, and $Xw$ are therefore the fitted
+values), and the $||y - Xw||^2_2$ refers to the squared [L2 vector
+norm](https://mathworld.wolfram.com/L2-Norm.html), which is the same as the
+sum of squares.
+
+$$
+||w||_1
+$$
+
+is the [L1 vector norm](https://mathworld.wolfram.com/L1-Norm.html) of the
+parameters $w$, which is the sum of the absolute values of the parameters.
+
+Let's do that calculation, with a low `alpha` (otherwise both slopes get
+forced down to zero):
+
+```{python}
+# We need LassoLars for increased accuracy.
+sk_lasso = sklm.LassoLars(alpha=0.01).fit(clarity_easiness, helpfulness)
+
+sk_lasso.coef_, sk_lasso.intercept_
+```
+
+Here is the equivalent `minimize` cost function:
+
+```{python}
+def sos_lasso(params, X, y, alpha):
+    ss_resid = sos(params, X, y)
+    n = len(y)
+    penalty = np.sum(np.abs(params[:-1]))
+    return 1 / (2 * n) * ss_resid + alpha * penalty
+```
+
+```{python}
+res_lasso = minimize(sos_lasso, [0, 0, 0], args=(X, y, 0.01),
+                     method='powell', tol=1e-10)
+res_lasso
+```
+
+```{python}
+res_lasso.x
+```
+
+## Cross-validation
+
+Should I add the "Easiness" regressor?  In other words, is a model that has _both_ the "Clarity" and "Easiness" regressor better than a model that just has the "Clarity" regressor?
+
+We could start by comparing the remaining (residual) sum of squares for the two models.
+
+```{python}
+# Make a single-column dataframe with Clarity
+clarity_df = clarity_easiness[['Clarity']]
+clarity_df
+```
+
+First we fit a linear model with the single-regressor "Clarity" model, and calculate the sum of squared residuals:
+
+```{python}
+single_fit = sklm.LinearRegression().fit(
+    clarity_df, helpfulness)
+single_y_hat = single_fit.predict(clarity_df)
+single_ss = np.sum((helpfulness - single_y_hat) ** 2)
+single_ss
+```
+
+Then we do the same for the two-regressor model, with "Clarity" and "Easiness":
+
+```{python}
+both_fit = sklm.LinearRegression().fit(
+    clarity_easiness, helpfulness)
+both_y_hat = both_fit.predict(clarity_easiness)
+both_ss = np.sum((helpfulness - both_y_hat) ** 2)
+both_ss
+```
+
+There's a small difference:
+
+```{python}
+single_ss - both_ss
+```
+
+Notice the sum of squared $SS_{\text{resid}}$ is very slightly lower for the model with "Easiness".   But in fact, we could show that we would reduce the error by adding almost any regressor to the model.  It turns out that the error can only ever go down, or stay the same, by adding another regressor.
+
+In fact — let's try it.  We'll add a regressor of random numbers to the "Clarity" regressor, and see how it fares:
+
+```{python}
+rng = np.random.default_rng()
+
+with_random = clarity_df.copy()
+with_random['random'] = rng.normal(size=n)
+with_random
+```
+
+```{python}
+random_fit = sklm.LinearRegression().fit(
+    with_random, helpfulness)
+random_y_hat = random_fit.predict(with_random)
+random_ss = np.sum((helpfulness - random_y_hat) ** 2)
+random_ss
+```
+
+```{python}
+single_ss - random_ss
+```
+
+Notice the random regressor does around as well (often better) than the "Easiness" regressor.  That's not a good sign for the usefulness of "Easiness".
+
+
+We would like a better test — one that tells us whether our model is
+better able to predict a _new_ value that the model hasn't seen before.
+
+We can do this with *cross-validation*.  *Leave one out* is a simple
+form of cross-validation.  The procedure is, that we take each row in
+the dataset in turn.  We drop that row from the dataset, and fit the
+model (estimate the parameters) on that dataset, with the row dropped.
+Then we use that model to *predict* the value from the row that we
+dropped — because this a value we did not use to build the model.  We do this for all rows, making a model and predicting the value from the row we dropped.  Then we ask — how well do the predicted values do in predicting the actual values?
+
+This is how that would work for the first row:
+
+* Drop the first row and keep it somewhere.
+* Run the model on the remaining rows.
+* Use model to predict target value for first row.
+* Store prediction.
+
+In code that might look like this:
+
+```{python}
+row0_label = 0  # Row label of the first row.
+# Row to drop, as a data frame:
+dropped_row = df.loc[row0_label:row0_label]
+dropped_row
+```
+
+We'll be using these columns for the design and target:
+
+```{python}
+x_cols = ['Clarity', 'Easiness']
+y_col = 'Helpfulness'
+```
+
+Fit model with remaining rows, and predict target variable for first
+row:
+
+```{python}
+# Dataframe without dropped row
+remaining_df = df.drop(index=row0_label)
+# Fit on everything but the dropped row.
+fit = sklm.LinearRegression().fit(
+    remaining_df[x_cols],
+    remaining_df[y_col])
+# Use fit to predict the dropped row.
+fitted_val = fit.predict(dropped_row[x_cols])
+fitted_val
+```
+
+Then we keep going to generate a fitted value for every row.
+
+Here's a function to do the leave-one-out fit for a given row label:
+
+
+```{python}
+def drop_and_predict(df, x_cols, y_col, row_label):
+    """ Drop value identified by `row_label`, fit with rest and predict
+
+    Parameters
+    ----------
+    df : DataFrame
+    x_cols : sequence
+        Sequence of column labels defining regressors.
+    y_col : str
+        Column label for target variable.
+    row_label : object
+        Row label of row to drop
+
+    Returns
+    -------
+    fitted : scalar
+        Fitted value for column `y_col` in row labeled `row_label`,
+        using fit from all rows except row labeled `row_label`.
+    """
+    dropped_row = df.loc[row_label:row_label]
+    # Dataframe without dropped row
+    remaining_df = df.drop(index=row_label)
+    # Fit on everything but the dropped row.
+    fit = sklm.LinearRegression().fit(
+        remaining_df[x_cols],
+        remaining_df[y_col])
+    # Use fit to predict target in the dropped row, and return.
+    return fit.predict(dropped_row[x_cols])[0]
+```
+
+Use `drop_and_predict` to build a model for all rows but the first, as
+above, and then predict the "Helpfulness" value of the first row.
+
+```{python}
+actual_value = df.loc[0, 'Helpfulness']
+predicted_value = drop_and_predict(df,
+                                   ['Clarity', 'Easiness'],
+                                   'Helpfulness',
+                                   0)
+predicted_value
+```
+
+Fit the model, with both "Clarity" and "Easiness", and drop / predict
+each "Helpfulness" value.
+
+```{python}
+predicted_with_easiness = df['Helpfulness'].copy()
+for label in df.index:
+    fitted = drop_and_predict(df,
+                              ['Clarity', 'Easiness'],
+                              'Helpfulness',
+                              label)
+    predicted_with_easiness.loc[label] = fitted
+predicted_with_easiness
+```
+
+Get the sum of squared residuals for these predictions:
+
+```{python}
+error_both = df['Helpfulness'] - predicted_with_easiness
+# Sum of squared prediction errors for larger model.
+np.sum(error_both ** 2)
+```
+
+Do the same for the model with "Clarity" only.
+
+```{python}
+predicted_without_easiness = df['Helpfulness'].copy()
+for label in df.index:
+    fitted = drop_and_predict(df, ['Clarity'], ['Helpfulness'], label)
+    predicted_without_easiness.loc[label] = fitted
+error_just_one = df['Helpfulness'] - predicted_without_easiness
+# Sum of squared prediction errors for smaller model.
+np.sum(error_just_one ** 2)
+```
+
+The model without "Easiness" does a slightly *better* job of predicting, with leave-one-out cross-validation.

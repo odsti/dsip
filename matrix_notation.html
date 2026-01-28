@@ -1,0 +1,1695 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Expressing the linear model with matrices &#8212; Data Science in Practice</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'matrix_notation';</script>
+    <link rel="canonical" href="https://lisds.github.io/dsip/matrix_notation.html" />
+    <link rel="icon" href="_static/dsfe_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Naive Bayes classifiers" href="naive_bayes.html" />
+    <link rel="prev" title="Fitting models with different cost functions" href="cost_functions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/dsfe_logo.png" class="logo__image only-light" alt="Data Science in Practice - Home"/>
+    <script>document.write(`<img src="_static/dsfe_logo.png" class="logo__image only-dark" alt="Data Science in Practice - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Coding background</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="assert.html">Using <code class="docutils literal notranslate"><span class="pre">assert</span></code> for testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arrays_and_images.html">Arrays as images, images as arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_and_argmin.html">Where and argmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="where_2d.html">Where in 2D</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_for_optimize.html">2D arrays, images, optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pathlib.html">Using the <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dictionaries.html">Dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pandas_and_dicts.html">Pandas and dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lambda_functions.html">Lambda functions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reading formulae</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="on_vectors.html">Vectors and dot products</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_vectors.html">Numpy, arrays, and vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algebra_of_sums.html">Some algebra with summation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_notation.html">Notation for linear regression models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector_projection.html">Vector projection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_introduction.html">Introducing principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_dimension_reduction.html">Dimension reduction with Principal Component Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intermediate regression</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lin_regression_multiple_predictors.html">Linear regression notation for models with multiple predictors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="epl_modeling.html">Attack or defense?  An example of multiple regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression_categorical_predictors.html">Categorical predictors in linear regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiple_predictors_statistical_adjustment.html">Statistical Adjustment in Multi-predictor Linear Regression Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logistic_regression_cross_validation.html">Multiple Logistic Regression, Model Selection and Cross-validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cost_functions.html">Fitting models with different cost functions</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Expressing the linear model with matrices</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Classification</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="naive_bayes.html">Naive Bayes classifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k_means.html">k-means clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Working with data</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="data_work.html">The problem with data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing on your computer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the-problem-with-notebooks.html">The joys and sorrows of notebooks</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/lisds/dsip/main?urlpath=lab/tree/matrix_notation.Rmd" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://ds.lis.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A//github.com/lisds/dsip&urlpath=lab/tree/dsip/matrix_notation.Rmd&branch=main" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on JupyterHub"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="JupyterHub logo" src="_static/images/logo_jupyterhub.svg">
+  </span>
+<span class="btn__text-container">JupyterHub</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/edit/main/matrix_notation.Rmd" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/lisds/dsip/issues/new?title=Issue%20on%20page%20%2Fmatrix_notation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/matrix_notation.Rmd" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.Rmd</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Expressing the linear model with matrices</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-regression">Simple regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-regression-in-matrix-form">Simple regression in matrix form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-regression">Multiple regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#population-sample-estimate">Population, sample, estimate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-the-model-with-matrix-algebra">Solving the model with matrix algebra</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-the-design-matrix-as-an-image">Displaying the design matrix as an image</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="expressing-the-linear-model-with-matrices">
+<h1>Expressing the linear model with matrices<a class="headerlink" href="#expressing-the-linear-model-with-matrices" title="Link to this heading">#</a></h1>
+<p>This page is about the notation for linear models.</p>
+<p>The linear model can be expressed in terms of matrices.  This makes it:</p>
+<ul class="simple">
+<li><p>Easier to write equations for the model</p></li>
+<li><p>Gives a mathematical expression that is easy to solve with matrix
+functions.</p></li>
+</ul>
+<p>For more detail on the General Linear Model, see <a class="reference external" href="http://matthew.dynevor.org/research/articles/does_glm_love.pdf">The general linear model
+and fMRI: Does love last
+forever?</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import numerical, data and plotting libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="c1"># Enable copy_on_write for Pandas&lt;3</span>
+<span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;mode.copy_on_write&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="c1"># Only show 6 decimals when printing</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This page starts with the model for simple regression. We then show how the
+simple regression gets expressed in a <em>design matrix</em>. Once we have that,
+it’s easy to extend simple regression to multiple regression. By adding some
+specially formed regressors, we can also express group membership.</p>
+<section id="simple-regression">
+<h2>Simple regression<a class="headerlink" href="#simple-regression" title="Link to this heading">#</a></h2>
+<p>We return to the example in <a class="reference internal" href="lin_regression_notation.html"><span class="std std-doc">linear regression
+notation</span></a>, predicting “prestige” scores for
+professions, from various other measures.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/Duncan_Occupational_Prestige_Reduced.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>type</th>
+      <th>income</th>
+      <th>education</th>
+      <th>prestige</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>lawyer</td>
+      <td>prof</td>
+      <td>76</td>
+      <td>98</td>
+      <td>89</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>banker</td>
+      <td>prof</td>
+      <td>78</td>
+      <td>82</td>
+      <td>92</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>machine.operator</td>
+      <td>bc</td>
+      <td>21</td>
+      <td>20</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>soda.clerk</td>
+      <td>bc</td>
+      <td>12</td>
+      <td>30</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>bartender</td>
+      <td>bc</td>
+      <td>16</td>
+      <td>28</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>waiter</td>
+      <td>bc</td>
+      <td>8</td>
+      <td>32</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>policeman</td>
+      <td>bc</td>
+      <td>34</td>
+      <td>47</td>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>teacher</td>
+      <td>prof</td>
+      <td>48</td>
+      <td>91</td>
+      <td>73</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>professor</td>
+      <td>prof</td>
+      <td>64</td>
+      <td>93</td>
+      <td>93</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>shoe.shiner</td>
+      <td>bc</td>
+      <td>9</td>
+      <td>17</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>machinist</td>
+      <td>bc</td>
+      <td>36</td>
+      <td>32</td>
+      <td>57</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>minister</td>
+      <td>prof</td>
+      <td>21</td>
+      <td>84</td>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>pilot</td>
+      <td>prof</td>
+      <td>72</td>
+      <td>76</td>
+      <td>83</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>electrician</td>
+      <td>bc</td>
+      <td>47</td>
+      <td>39</td>
+      <td>53</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>store.manager</td>
+      <td>prof</td>
+      <td>42</td>
+      <td>44</td>
+      <td>45</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Let’s start off trying to predict <code class="docutils literal notranslate"><span class="pre">prestige</span></code> with <code class="docutils literal notranslate"><span class="pre">income</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prestige</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;prestige&#39;</span><span class="p">]</span>
+<span class="n">income</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">prestige</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Income&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Prestige&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/631612036b9f400750ca7638444b680e290e141ffe38be27164ef9c1fec331ba.png" src="_images/631612036b9f400750ca7638444b680e290e141ffe38be27164ef9c1fec331ba.png" />
+</div>
+</div>
+<p>Let’s immediately rename the values we are <em>predicting</em> to <code class="docutils literal notranslate"><span class="pre">y</span></code>, and the
+values we are <em>predicting with</em> to <code class="docutils literal notranslate"><span class="pre">x</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">prestige</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">income</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">n</span></code> to the number of observations (observational units, rows):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">prestige</span><span class="p">)</span>
+<span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15
+</pre></div>
+</div>
+</div>
+</div>
+<p>For this page we will start with a preliminary guess for a straight line that links
+the <code class="docutils literal notranslate"><span class="pre">income</span></code> scores to the <code class="docutils literal notranslate"><span class="pre">prestige</span></code> scores.  It looks like the <code class="docutils literal notranslate"><span class="pre">prestige</span></code> scores go up by about 50 as the <code class="docutils literal notranslate"><span class="pre">income</span></code> scores rise from 10 to 50.  The matching intercept looks like it could be around 5.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">/</span> <span class="mi">40</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We use this line to <em>predict</em> the <code class="docutils literal notranslate"><span class="pre">prestige</span></code> scores from the <code class="docutils literal notranslate"><span class="pre">income</span></code> scores.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predicted</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">income</span> <span class="o">+</span> <span class="n">c</span>
+<span class="n">predicted</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0     100.00
+1     102.50
+2      31.25
+3      20.00
+4      25.00
+5      15.00
+6      47.50
+7      65.00
+8      85.00
+9      16.25
+10     50.00
+11     31.25
+12     95.00
+13     63.75
+14     57.50
+Name: income, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the data and the predictions</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Actual data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">predicted</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Predictions&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Income&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Prestige score&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Income vs Prestige with guessed line&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f61f0169040&gt;
+</pre></div>
+</div>
+<img alt="_images/0648ba3519d054c4ea95c2927547855bedb2dc78dfb62ab9097681b46b5f544d.png" src="_images/0648ba3519d054c4ea95c2927547855bedb2dc78dfb62ab9097681b46b5f544d.png" />
+</div>
+</div>
+<p>As you saw in <a class="reference internal" href="lin_regression_notation.html"><span class="std std-doc">regression notation</span></a>, we can write out
+this model more formally and more generally in mathematical symbols.</p>
+<p><span class="math notranslate nohighlight">\(\newcommand{\yvec}{\vec{y}} \newcommand{\xvec}{\vec{x}} \newcommand{\evec}{\vec{\varepsilon}}\)</span></p>
+<p>We write our <code class="docutils literal notranslate"><span class="pre">y</span></code> (<code class="docutils literal notranslate"><span class="pre">prestige</span></code>) data <span class="math notranslate nohighlight">\(\yvec\)</span> — a vector with 15 values, one
+for each profession.</p>
+<p><span class="math notranslate nohighlight">\(y_1\)</span> is the value for the first profession and <span class="math notranslate nohighlight">\(y_i\)</span> is the value for
+profession <span class="math notranslate nohighlight">\(i\)</span> where <span class="math notranslate nohighlight">\(i \in 1 .. 15\)</span>:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell - it is to give a better display to the mathematics.</span>
+<span class="c1"># Import Symbolic mathematics routines.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Eq</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">IndexedBase</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">init_printing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sympy.matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatAdd</span><span class="p">,</span> <span class="n">MatMul</span><span class="p">,</span> <span class="n">MatrixSymbol</span>
+
+<span class="c1"># Make equations print in definition order.</span>
+<span class="n">init_printing</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+
+<span class="n">sy_y</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\vec</span><span class="si">{y}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">sy_y_ind</span> <span class="o">=</span> <span class="n">IndexedBase</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="n">vector_indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">sy_y_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span><span class="n">sy_y_ind</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vector_indices</span><span class="p">])</span>
+
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y</span><span class="p">,</span> <span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \vec{y} = \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = \left[\begin{matrix}89\\92\\24\\6\\7\\10\\41\\73\\93\\3\\57\\87\\83\\53\\45\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">x</span></code> (the <code class="docutils literal notranslate"><span class="pre">income</span></code> score) is a <em>predictor</em>. Lets call the income scores <span class="math notranslate nohighlight">\(\xvec\)</span>.
+<span class="math notranslate nohighlight">\(\xvec\)</span> is another vector with 15 values. <span class="math notranslate nohighlight">\(x_1\)</span> is the value for the first
+profession and <span class="math notranslate nohighlight">\(x_i\)</span> is the value for profession <span class="math notranslate nohighlight">\(i\)</span> where <span class="math notranslate nohighlight">\(i \in 1 .. 15\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell - it is to give a better display to the mathematics.</span>
+<span class="n">sy_x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\vec</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">sy_x_ind</span> <span class="o">=</span> <span class="n">IndexedBase</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">sy_x_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span><span class="n">sy_x_ind</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vector_indices</span><span class="p">])</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_x</span><span class="p">,</span> <span class="n">Eq</span><span class="p">(</span><span class="n">sy_x_val</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \vec{x} = \left[\begin{matrix}{x}_{1}\\{x}_{2}\\{x}_{3}\\{x}_{4}\\{x}_{5}\\{x}_{6}\\{x}_{7}\\{x}_{8}\\{x}_{9}\\{x}_{10}\\{x}_{11}\\{x}_{12}\\{x}_{13}\\{x}_{14}\\{x}_{15}\end{matrix}\right] = \left[\begin{matrix}76\\78\\21\\12\\16\\8\\34\\48\\64\\9\\36\\21\\72\\47\\42\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>In <a class="reference internal" href="lin_regression_notation.html"><span class="std std-doc">regression notation</span></a>, we wrote our straight
+line model as:</p>
+<p><span class="math notranslate nohighlight">\(y_i = bx_i + c + e_i\)</span></p>
+</section>
+<section id="simple-regression-in-matrix-form">
+<h2>Simple regression in matrix form<a class="headerlink" href="#simple-regression-in-matrix-form" title="Link to this heading">#</a></h2>
+<p>It turns out it will be useful to rephrase the simple regression model
+in <em>matrix form</em>. Let’s make the data and predictor and errors into
+vectors.</p>
+<p>We already the <span class="math notranslate nohighlight">\(y\)</span> values in our <span class="math notranslate nohighlight">\(\yvec\)</span> vector above, and the <span class="math notranslate nohighlight">\(x\)</span> values in the <span class="math notranslate nohighlight">\(\xvec\)</span> vector.</p>
+<p><span class="math notranslate nohighlight">\(\evec\)</span> is the vector of as-yet-unknown errors <span class="math notranslate nohighlight">\(e_1, e_2,  ... e_{15}\)</span>.  The
+values of the errors depend on the predicted values, and therefore, on our
+slope <span class="math notranslate nohighlight">\(b\)</span> and intercept <span class="math notranslate nohighlight">\(c\)</span>.</p>
+<p>We calculate the errors as:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">predicted</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We write the errors as an error vector:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">sy_e</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\vec{\varepsilon}&#39;</span><span class="p">)</span>
+<span class="n">sy_e_ind</span> <span class="o">=</span> <span class="n">IndexedBase</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">)</span>
+<span class="n">sy_e_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span><span class="n">sy_e_ind</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vector_indices</span><span class="p">])</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_e</span><span class="p">,</span> <span class="n">sy_e_val</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \vec{\varepsilon} = \left[\begin{matrix}{e}_{1}\\{e}_{2}\\{e}_{3}\\{e}_{4}\\{e}_{5}\\{e}_{6}\\{e}_{7}\\{e}_{8}\\{e}_{9}\\{e}_{10}\\{e}_{11}\\{e}_{12}\\{e}_{13}\\{e}_{14}\\{e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>Now we can rephrase our model as:</p>
+<div class="math notranslate nohighlight">
+\[
+\yvec = b \xvec + c + \evec
+\]</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">sy_b</span><span class="p">,</span> <span class="n">sy_c</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;b, c&#39;</span><span class="p">)</span>
+<span class="n">sy_c_mat</span> <span class="o">=</span> <span class="n">MatrixSymbol</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">rhs</span> <span class="o">=</span> <span class="n">MatAdd</span><span class="p">(</span><span class="n">MatMul</span><span class="p">(</span><span class="n">sy_b</span><span class="p">,</span> <span class="n">sy_x_val</span><span class="p">),</span> <span class="n">sy_c_mat</span><span class="p">,</span> <span class="n">sy_e_val</span><span class="p">)</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = b \left[\begin{matrix}{x}_{1}\\{x}_{2}\\{x}_{3}\\{x}_{4}\\{x}_{5}\\{x}_{6}\\{x}_{7}\\{x}_{8}\\{x}_{9}\\{x}_{10}\\{x}_{11}\\{x}_{12}\\{x}_{13}\\{x}_{14}\\{x}_{15}\end{matrix}\right] + c + \left[\begin{matrix}{e}_{1}\\{e}_{2}\\{e}_{3}\\{e}_{4}\\{e}_{5}\\{e}_{6}\\{e}_{7}\\{e}_{8}\\{e}_{9}\\{e}_{10}\\{e}_{11}\\{e}_{12}\\{e}_{13}\\{e}_{14}\\{e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>Confirm this is true when we calculate on our particular values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Confirm that y is close as dammit to b * x + c + e</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">c</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Bear with with us for a little trick. We define <span class="math notranslate nohighlight">\(\vec{o}\)</span> as a vector of ones,
+like this:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">sy_o</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\vec</span><span class="si">{o}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">sy_o_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vector_indices</span><span class="p">])</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_o</span><span class="p">,</span> <span class="n">sy_o_val</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \vec{o} = \left[\begin{matrix}1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>In code, in our case:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">o</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can rewrite the formula as:</p>
+<div class="math notranslate nohighlight">
+\[
+\yvec = b\xvec + c\vec{o} + \evec
+\]</div>
+<p>because <span class="math notranslate nohighlight">\(o_i = 1\)</span> and so <span class="math notranslate nohighlight">\(co_i = c\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">rhs</span> <span class="o">=</span> <span class="n">MatAdd</span><span class="p">(</span><span class="n">MatMul</span><span class="p">(</span><span class="n">sy_b</span><span class="p">,</span> <span class="n">sy_x_val</span><span class="p">),</span> <span class="n">MatMul</span><span class="p">(</span><span class="n">sy_c</span><span class="p">,</span> <span class="n">sy_o_val</span><span class="p">),</span> <span class="n">sy_e_val</span><span class="p">)</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = b \left[\begin{matrix}{x}_{1}\\{x}_{2}\\{x}_{3}\\{x}_{4}\\{x}_{5}\\{x}_{6}\\{x}_{7}\\{x}_{8}\\{x}_{9}\\{x}_{10}\\{x}_{11}\\{x}_{12}\\{x}_{13}\\{x}_{14}\\{x}_{15}\end{matrix}\right] + c \left[\begin{matrix}1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\\1\end{matrix}\right] + \left[\begin{matrix}{e}_{1}\\{e}_{2}\\{e}_{3}\\{e}_{4}\\{e}_{5}\\{e}_{6}\\{e}_{7}\\{e}_{8}\\{e}_{9}\\{e}_{10}\\{e}_{11}\\{e}_{12}\\{e}_{13}\\{e}_{14}\\{e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>This evaluates to the result we intend:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">sy_c</span> <span class="o">*</span> <span class="n">sy_o_val</span> <span class="o">+</span> <span class="n">sy_b</span> <span class="o">*</span> <span class="n">sy_x_val</span> <span class="o">+</span> <span class="n">sy_e_val</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = \left[\begin{matrix}c + b {x}_{1} + {e}_{1}\\c + b {x}_{2} + {e}_{2}\\c + b {x}_{3} + {e}_{3}\\c + b {x}_{4} + {e}_{4}\\c + b {x}_{5} + {e}_{5}\\c + b {x}_{6} + {e}_{6}\\c + b {x}_{7} + {e}_{7}\\c + b {x}_{8} + {e}_{8}\\c + b {x}_{9} + {e}_{9}\\c + b {x}_{10} + {e}_{10}\\c + b {x}_{11} + {e}_{11}\\c + b {x}_{12} + {e}_{12}\\c + b {x}_{13} + {e}_{13}\\c + b {x}_{14} + {e}_{14}\\c + b {x}_{15} + {e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Confirm that y is close as dammit to b * x + c * o + e</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">o</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(\newcommand{Xmat}{\boldsymbol X} \newcommand{\bvec}{\vec{\beta}}\)</span></p>
+<p>We can now rephrase the calculation in terms of matrix multiplication.</p>
+<p>Call <span class="math notranslate nohighlight">\(\Xmat\)</span> the matrix of two columns, where the first column is <span class="math notranslate nohighlight">\(\xvec\)</span> and
+the second column is the column of ones (<span class="math notranslate nohighlight">\(\vec{o}\)</span> above).</p>
+<p>In code, for our case:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[76.,  1.],
+       [78.,  1.],
+       [21.,  1.],
+       [12.,  1.],
+       [16.,  1.],
+       [ 8.,  1.],
+       [34.,  1.],
+       [48.,  1.],
+       [64.,  1.],
+       [ 9.,  1.],
+       [36.,  1.],
+       [21.,  1.],
+       [72.,  1.],
+       [47.,  1.],
+       [42.,  1.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Call <span class="math notranslate nohighlight">\(\bvec\)</span> the column vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left[
+\begin{array}{\bvec}
+b \\
+c \\
+\end{array}
+\right]
+\end{split}\]</div>
+<p>In code:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+<span class="n">B</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.25, 5.  ])
+</pre></div>
+</div>
+</div>
+</div>
+<p>This gives us exactly the same calculation as <span class="math notranslate nohighlight">\(\yvec = b \xvec + c + \evec\)</span>
+above, but in terms of matrix multiplication:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">sy_beta_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([[</span><span class="n">sy_b</span><span class="p">],</span> <span class="p">[</span><span class="n">sy_c</span><span class="p">]])</span>
+<span class="n">sy_xmat_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">sy_x_val</span><span class="p">,</span> <span class="n">sy_o_val</span><span class="p">)</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">MatAdd</span><span class="p">(</span><span class="n">MatMul</span><span class="p">(</span><span class="n">sy_xmat_val</span><span class="p">,</span> <span class="n">sy_beta_val</span><span class="p">),</span> <span class="n">sy_e_val</span><span class="p">),</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = \left[\begin{matrix}{x}_{1} &amp; 1\\{x}_{2} &amp; 1\\{x}_{3} &amp; 1\\{x}_{4} &amp; 1\\{x}_{5} &amp; 1\\{x}_{6} &amp; 1\\{x}_{7} &amp; 1\\{x}_{8} &amp; 1\\{x}_{9} &amp; 1\\{x}_{10} &amp; 1\\{x}_{11} &amp; 1\\{x}_{12} &amp; 1\\{x}_{13} &amp; 1\\{x}_{14} &amp; 1\\{x}_{15} &amp; 1\end{matrix}\right] \left[\begin{matrix}b\\c\end{matrix}\right] + \left[\begin{matrix}{e}_{1}\\{e}_{2}\\{e}_{3}\\{e}_{4}\\{e}_{5}\\{e}_{6}\\{e}_{7}\\{e}_{8}\\{e}_{9}\\{e}_{10}\\{e}_{11}\\{e}_{12}\\{e}_{13}\\{e}_{14}\\{e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>In symbols:</p>
+<div class="math notranslate nohighlight">
+\[
+\yvec = \Xmat \bvec + \evec
+\]</div>
+<p>Because of the way that matrix multiplication works, this again gives us the
+intended result:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">sy_xmat_val</span> <span class="o">@</span> <span class="n">sy_beta_val</span> <span class="o">+</span> <span class="n">sy_e_val</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = \left[\begin{matrix}c + b {x}_{1} + {e}_{1}\\c + b {x}_{2} + {e}_{2}\\c + b {x}_{3} + {e}_{3}\\c + b {x}_{4} + {e}_{4}\\c + b {x}_{5} + {e}_{5}\\c + b {x}_{6} + {e}_{6}\\c + b {x}_{7} + {e}_{7}\\c + b {x}_{8} + {e}_{8}\\c + b {x}_{9} + {e}_{9}\\c + b {x}_{10} + {e}_{10}\\c + b {x}_{11} + {e}_{11}\\c + b {x}_{12} + {e}_{12}\\c + b {x}_{13} + {e}_{13}\\c + b {x}_{14} + {e}_{14}\\c + b {x}_{15} + {e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>We write <em>matrix multiplication</em> in Numpy as <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Confirm that y is close as dammit to X @ B + e</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span> <span class="o">@</span> <span class="n">B</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We still haven’t found our best fitting line. But before we go further, it
+might be clear that we can easily add a new predictor here.</p>
+</section>
+<section id="multiple-regression">
+<h2>Multiple regression<a class="headerlink" href="#multiple-regression" title="Link to this heading">#</a></h2>
+<p>We might also believe that prestige increases with the education level associated with that profession.</p>
+<p>Let us add education level as another predictor.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">education</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;education&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now rename the <code class="docutils literal notranslate"><span class="pre">income</span></code> predictor vector from <span class="math notranslate nohighlight">\(\xvec\)</span> to
+<span class="math notranslate nohighlight">\(\xvec_1\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># income (our previous x) is the first column we will use to predict.</span>
+<span class="n">x_1</span> <span class="o">=</span> <span class="n">income</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Of course <span class="math notranslate nohighlight">\(\xvec_1\)</span> has 15 values <span class="math notranslate nohighlight">\(x_{1, 1}..x_{1, 15}\)</span>. Call the <code class="docutils literal notranslate"><span class="pre">education</span></code>
+predictor vector <span class="math notranslate nohighlight">\(\xvec_2\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># education is the second column we use to predict</span>
+<span class="n">x_2</span> <span class="o">=</span> <span class="n">education</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Call the slope for <code class="docutils literal notranslate"><span class="pre">income</span></code> <span class="math notranslate nohighlight">\(b_1\)</span> (slope for <span class="math notranslate nohighlight">\(\xvec_1\)</span>). Call the slope for
+education <span class="math notranslate nohighlight">\(b_2\)</span> (slope for <span class="math notranslate nohighlight">\(\xvec_2\)</span>). Our model is:</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = b_1 x_{1, i} + b_2 x_{2, i} + c + e_i
+\]</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">sy_b_1</span><span class="p">,</span> <span class="n">sy_b_2</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;b_1, b_2&#39;</span><span class="p">)</span>
+<span class="n">sy_x_1_ind</span> <span class="o">=</span> <span class="n">IndexedBase</span><span class="p">(</span><span class="s2">&quot;x_1,&quot;</span><span class="p">)</span>
+<span class="n">sy_x_1_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span><span class="n">sy_x_1_ind</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vector_indices</span><span class="p">])</span>
+<span class="n">sy_x_2_ind</span> <span class="o">=</span> <span class="n">IndexedBase</span><span class="p">(</span><span class="s2">&quot;x_2,&quot;</span><span class="p">)</span>
+<span class="n">sy_x_2_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span><span class="n">sy_x_2_ind</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vector_indices</span><span class="p">])</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">MatAdd</span><span class="p">(</span><span class="n">MatMul</span><span class="p">(</span><span class="n">sy_b_1</span><span class="p">,</span> <span class="n">sy_x_1_val</span><span class="p">),</span> <span class="n">MatMul</span><span class="p">(</span><span class="n">sy_b_2</span><span class="p">,</span> <span class="n">sy_x_2_val</span><span class="p">),</span> <span class="n">sy_c_mat</span><span class="p">,</span> <span class="n">sy_e_val</span><span class="p">),</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = b_{1} \left[\begin{matrix}{x_{1,}}_{1}\\{x_{1,}}_{2}\\{x_{1,}}_{3}\\{x_{1,}}_{4}\\{x_{1,}}_{5}\\{x_{1,}}_{6}\\{x_{1,}}_{7}\\{x_{1,}}_{8}\\{x_{1,}}_{9}\\{x_{1,}}_{10}\\{x_{1,}}_{11}\\{x_{1,}}_{12}\\{x_{1,}}_{13}\\{x_{1,}}_{14}\\{x_{1,}}_{15}\end{matrix}\right] + b_{2} \left[\begin{matrix}{x_{2,}}_{1}\\{x_{2,}}_{2}\\{x_{2,}}_{3}\\{x_{2,}}_{4}\\{x_{2,}}_{5}\\{x_{2,}}_{6}\\{x_{2,}}_{7}\\{x_{2,}}_{8}\\{x_{2,}}_{9}\\{x_{2,}}_{10}\\{x_{2,}}_{11}\\{x_{2,}}_{12}\\{x_{2,}}_{13}\\{x_{2,}}_{14}\\{x_{2,}}_{15}\end{matrix}\right] + c + \left[\begin{matrix}{e}_{1}\\{e}_{2}\\{e}_{3}\\{e}_{4}\\{e}_{5}\\{e}_{6}\\{e}_{7}\\{e}_{8}\\{e}_{9}\\{e}_{10}\\{e}_{11}\\{e}_{12}\\{e}_{13}\\{e}_{14}\\{e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>In this model <span class="math notranslate nohighlight">\(\Xmat\)</span> has three columns (<span class="math notranslate nohighlight">\(\xvec_1\)</span>, <span class="math notranslate nohighlight">\(\xvec_2\)</span> and ones), and
+the <span class="math notranslate nohighlight">\(\bvec\)</span> vector has three values <span class="math notranslate nohighlight">\(b_1, b_2, c\)</span>. This gives the same matrix
+formulation, with our new <span class="math notranslate nohighlight">\(\Xmat\)</span> and <span class="math notranslate nohighlight">\(\bvec\)</span>: <span class="math notranslate nohighlight">\(\yvec = \Xmat \bvec + \evec\)</span>.</p>
+<p>This is a <em>linear</em> model because our model says that the data <span class="math notranslate nohighlight">\(y_i\)</span> comes
+from the <em>sum</em> of some components (<span class="math notranslate nohighlight">\(b_1 x_{1, i}, b_2 x_{2, i}, c, e_i\)</span>).</p>
+<p>We can keep doing this by adding more and more regressors. In general, a linear
+model with <span class="math notranslate nohighlight">\(p\)</span> predictors looks like this:</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = b_1 x_{1, i} + b_2 x_{2, i} + ... b_p x_{p, i} + e_i
+\]</div>
+<p>In the case of the models above, the final predictor <span class="math notranslate nohighlight">\(\xvec_p\)</span> would be a
+column of ones, to express the intercept in the model.</p>
+<p>Any model of the form above can still be phrased in the matrix form:</p>
+<div class="math notranslate nohighlight">
+\[
+\yvec = \Xmat \bvec + \evec
+\]</div>
+<p>where:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">sy_xmat3_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">sy_x_1_val</span><span class="p">,</span> <span class="n">sy_x_2_val</span><span class="p">,</span> <span class="n">sy_o_val</span><span class="p">)</span>
+<span class="n">sy_Xmat</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\boldsymbol</span><span class="si">{X}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_Xmat</span><span class="p">,</span> <span class="n">sy_xmat3_val</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \boldsymbol{X} = \left[\begin{matrix}{x_{1,}}_{1} &amp; {x_{2,}}_{1} &amp; 1\\{x_{1,}}_{2} &amp; {x_{2,}}_{2} &amp; 1\\{x_{1,}}_{3} &amp; {x_{2,}}_{3} &amp; 1\\{x_{1,}}_{4} &amp; {x_{2,}}_{4} &amp; 1\\{x_{1,}}_{5} &amp; {x_{2,}}_{5} &amp; 1\\{x_{1,}}_{6} &amp; {x_{2,}}_{6} &amp; 1\\{x_{1,}}_{7} &amp; {x_{2,}}_{7} &amp; 1\\{x_{1,}}_{8} &amp; {x_{2,}}_{8} &amp; 1\\{x_{1,}}_{9} &amp; {x_{2,}}_{9} &amp; 1\\{x_{1,}}_{10} &amp; {x_{2,}}_{10} &amp; 1\\{x_{1,}}_{11} &amp; {x_{2,}}_{11} &amp; 1\\{x_{1,}}_{12} &amp; {x_{2,}}_{12} &amp; 1\\{x_{1,}}_{13} &amp; {x_{2,}}_{13} &amp; 1\\{x_{1,}}_{14} &amp; {x_{2,}}_{14} &amp; 1\\{x_{1,}}_{15} &amp; {x_{2,}}_{15} &amp; 1\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>In code in our case:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Design X in values</span>
+<span class="n">X_3_cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">,</span> <span class="n">o</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X_3_cols</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[76., 98.,  1.],
+       [78., 82.,  1.],
+       [21., 20.,  1.],
+       [12., 30.,  1.],
+       [16., 28.,  1.],
+       [ 8., 32.,  1.],
+       [34., 47.,  1.],
+       [48., 91.,  1.],
+       [64., 93.,  1.],
+       [ 9., 17.,  1.],
+       [36., 32.,  1.],
+       [21., 84.,  1.],
+       [72., 76.,  1.],
+       [47., 39.,  1.],
+       [42., 44.,  1.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>In symbols:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">sy_beta2_val</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span><span class="n">sy_b_1</span><span class="p">,</span> <span class="n">sy_b_2</span><span class="p">,</span> <span class="n">sy_c</span><span class="p">])</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">MatAdd</span><span class="p">(</span><span class="n">MatMul</span><span class="p">(</span><span class="n">sy_xmat3_val</span><span class="p">,</span> <span class="n">sy_beta2_val</span><span class="p">),</span> <span class="n">sy_e_val</span><span class="p">),</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = \left[\begin{matrix}{x_{1,}}_{1} &amp; {x_{2,}}_{1} &amp; 1\\{x_{1,}}_{2} &amp; {x_{2,}}_{2} &amp; 1\\{x_{1,}}_{3} &amp; {x_{2,}}_{3} &amp; 1\\{x_{1,}}_{4} &amp; {x_{2,}}_{4} &amp; 1\\{x_{1,}}_{5} &amp; {x_{2,}}_{5} &amp; 1\\{x_{1,}}_{6} &amp; {x_{2,}}_{6} &amp; 1\\{x_{1,}}_{7} &amp; {x_{2,}}_{7} &amp; 1\\{x_{1,}}_{8} &amp; {x_{2,}}_{8} &amp; 1\\{x_{1,}}_{9} &amp; {x_{2,}}_{9} &amp; 1\\{x_{1,}}_{10} &amp; {x_{2,}}_{10} &amp; 1\\{x_{1,}}_{11} &amp; {x_{2,}}_{11} &amp; 1\\{x_{1,}}_{12} &amp; {x_{2,}}_{12} &amp; 1\\{x_{1,}}_{13} &amp; {x_{2,}}_{13} &amp; 1\\{x_{1,}}_{14} &amp; {x_{2,}}_{14} &amp; 1\\{x_{1,}}_{15} &amp; {x_{2,}}_{15} &amp; 1\end{matrix}\right] \left[\begin{matrix}b_{1}\\b_{2}\\c\end{matrix}\right] + \left[\begin{matrix}{e}_{1}\\{e}_{2}\\{e}_{3}\\{e}_{4}\\{e}_{5}\\{e}_{6}\\{e}_{7}\\{e}_{8}\\{e}_{9}\\{e}_{10}\\{e}_{11}\\{e}_{12}\\{e}_{13}\\{e}_{14}\\{e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<p>As we were hoping, this evaluates to:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore this cell.</span>
+<span class="n">Eq</span><span class="p">(</span><span class="n">sy_y_val</span><span class="p">,</span> <span class="n">sy_xmat3_val</span> <span class="o">@</span> <span class="n">sy_beta2_val</span> <span class="o">+</span> <span class="n">sy_e_val</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\begin{split}\displaystyle \left[\begin{matrix}{y}_{1}\\{y}_{2}\\{y}_{3}\\{y}_{4}\\{y}_{5}\\{y}_{6}\\{y}_{7}\\{y}_{8}\\{y}_{9}\\{y}_{10}\\{y}_{11}\\{y}_{12}\\{y}_{13}\\{y}_{14}\\{y}_{15}\end{matrix}\right] = \left[\begin{matrix}c + b_{1} {x_{1,}}_{1} + b_{2} {x_{2,}}_{1} + {e}_{1}\\c + b_{1} {x_{1,}}_{2} + b_{2} {x_{2,}}_{2} + {e}_{2}\\c + b_{1} {x_{1,}}_{3} + b_{2} {x_{2,}}_{3} + {e}_{3}\\c + b_{1} {x_{1,}}_{4} + b_{2} {x_{2,}}_{4} + {e}_{4}\\c + b_{1} {x_{1,}}_{5} + b_{2} {x_{2,}}_{5} + {e}_{5}\\c + b_{1} {x_{1,}}_{6} + b_{2} {x_{2,}}_{6} + {e}_{6}\\c + b_{1} {x_{1,}}_{7} + b_{2} {x_{2,}}_{7} + {e}_{7}\\c + b_{1} {x_{1,}}_{8} + b_{2} {x_{2,}}_{8} + {e}_{8}\\c + b_{1} {x_{1,}}_{9} + b_{2} {x_{2,}}_{9} + {e}_{9}\\c + b_{1} {x_{1,}}_{10} + b_{2} {x_{2,}}_{10} + {e}_{10}\\c + b_{1} {x_{1,}}_{11} + b_{2} {x_{2,}}_{11} + {e}_{11}\\c + b_{1} {x_{1,}}_{12} + b_{2} {x_{2,}}_{12} + {e}_{12}\\c + b_{1} {x_{1,}}_{13} + b_{2} {x_{2,}}_{13} + {e}_{13}\\c + b_{1} {x_{1,}}_{14} + b_{2} {x_{2,}}_{14} + {e}_{14}\\c + b_{1} {x_{1,}}_{15} + b_{2} {x_{2,}}_{15} + {e}_{15}\end{matrix}\right]\end{split}\]</div>
+</div>
+</div>
+<section id="population-sample-estimate">
+<h3>Population, sample, estimate<a class="headerlink" href="#population-sample-estimate" title="Link to this heading">#</a></h3>
+<p><span class="math notranslate nohighlight">\(\newcommand{\bhat}{\hat{\bvec}} \newcommand{\yhat}{\hat{\yvec}}\)</span>
+Our professions and their prestige scores are a <em>sample</em> from the
+population of all professions’ prestige scores. The parameters
+<span class="math notranslate nohighlight">\(\bvec\)</span> are the parameters that fit the design <span class="math notranslate nohighlight">\(\Xmat\)</span> to
+the <em>population</em> scores. We only have a sample from this population, so
+we cannot get the true population <span class="math notranslate nohighlight">\(\bvec\)</span> vector, we can only
+<em>estimate</em> <span class="math notranslate nohighlight">\(\bvec\)</span> from our sample. We will write this sample
+estimate as <span class="math notranslate nohighlight">\(\bhat\)</span> to distinguish it from the true population
+parameters <span class="math notranslate nohighlight">\(\bvec\)</span>.</p>
+</section>
+</section>
+<section id="solving-the-model-with-matrix-algebra">
+<h2>Solving the model with matrix algebra<a class="headerlink" href="#solving-the-model-with-matrix-algebra" title="Link to this heading">#</a></h2>
+<p>The reason to formulate our problem with matrices is so we can use some
+basic matrix algebra to estimate the “best” line.</p>
+<p>Let’s assume that we want an estimate for the line parameters (intercept
+and slope) that gives the smallest “distance” between the estimated
+values (predicted from the line), and the actual values (the data).</p>
+<p>We’ll define ‘distance’ as the squared difference of the predicted value from
+the actual value. These are the squared error terms <span class="math notranslate nohighlight">\(e_1^2, e_2^2 ... e_{n}^2\)</span>,
+where <span class="math notranslate nohighlight">\(n\)</span> is the number of observations; 15 in our case.</p>
+<p>As a reminder: our model is:</p>
+<div class="math notranslate nohighlight">
+\[
+\yvec = \Xmat \bvec + \evec
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\yvec\)</span> is the data vector <span class="math notranslate nohighlight">\(y_1, y_2, ... y_n\)</span>,
+<span class="math notranslate nohighlight">\(\Xmat\)</span> is the design matrix of shape <span class="math notranslate nohighlight">\(n, p\)</span>, <span class="math notranslate nohighlight">\(\bvec\)</span>
+is the parameter vector, <span class="math notranslate nohighlight">\(b_1, b_2 ... b_p\)</span>, and <span class="math notranslate nohighlight">\(\evec\)</span> is
+the error vector giving errors for each observation
+<span class="math notranslate nohighlight">\(\epsilon_1, \epsilon_2 ... \epsilon_n\)</span>.</p>
+<p>Each column of <span class="math notranslate nohighlight">\(\Xmat\)</span> is a regressor vector, so <span class="math notranslate nohighlight">\(\Xmat\)</span> can
+be thought of as the column concatenation of <span class="math notranslate nohighlight">\(p\)</span> vectors
+<span class="math notranslate nohighlight">\(\xvec_1, \xvec_2 ... \xvec_p\)</span>, where <span class="math notranslate nohighlight">\(\xvec_1\)</span> is the first
+regressor <em>vector</em>, and so on.</p>
+<p>In our case, we want an estimate <span class="math notranslate nohighlight">\(\bhat\)</span> for the vector
+<span class="math notranslate nohighlight">\(\bvec\)</span> such that the errors <span class="math notranslate nohighlight">\(\evec = \yvec - \Xmat \bhat\)</span>
+have the smallest sum of squares <span class="math notranslate nohighlight">\(\sum_{i=1}^n{e_i^2}\)</span>.
+<span class="math notranslate nohighlight">\(\sum_{i=1}^n{e_i^2}\)</span> is called the <em>residual sum of squares</em>.</p>
+<p>When we have our <span class="math notranslate nohighlight">\(\bhat\)</span> estimate, then the prediction of the data
+from the estimate is given by <span class="math notranslate nohighlight">\(\Xmat \bhat\)</span>.</p>
+<p>We call this the predicted or estimated data, and write it as
+<span class="math notranslate nohighlight">\(\yhat\)</span>. The errors are then given by <span class="math notranslate nohighlight">\(\yvec - \yhat\)</span>.</p>
+<p>We might expect that, when we have found the right <span class="math notranslate nohighlight">\(\bhat\)</span> then the errors
+will have nothing in them that can still be explained by the design matrix
+<span class="math notranslate nohighlight">\(\Xmat\)</span>. This is the same as saying that, when we have best prediction of the
+data (<span class="math notranslate nohighlight">\(\yhat = \Xmat \bhat\)</span>), the design matrix <span class="math notranslate nohighlight">\(\Xmat\)</span> should be orthogonal
+to the remaining error (<span class="math notranslate nohighlight">\(\yvec - \yhat\)</span>).</p>
+<p>For those of you who have learned <a class="reference external" href="http://matthew-brett.github.io/teaching/on_vectors.html">about
+vectors</a> in
+mathematics, you may remember that we say that two vectors are <em>orthogonal</em> if
+they have a <em>dot product</em> of zero.</p>
+<p>If the <em>design</em> is orthogonal to the errors, then <span class="math notranslate nohighlight">\(\Xmat^T \evec\)</span> should be a
+vector of zeros.</p>
+<p>If that is the case then we can multiply <span class="math notranslate nohighlight">\(\yvec = \Xmat \bhat + \evec\)</span> through
+by <span class="math notranslate nohighlight">\(\Xmat^T\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\Xmat^T \yvec = \Xmat^T \Xmat \bhat + \Xmat^T \evec
+\]</div>
+<p>The last term now disappears because it is zero and:</p>
+<div class="math notranslate nohighlight">
+\[
+\Xmat^T \yvec = \Xmat^T \Xmat \bhat
+\]</div>
+<p>If <span class="math notranslate nohighlight">\(\Xmat^T \Xmat\)</span> is invertible (has a matrix inverse
+<span class="math notranslate nohighlight">\((\Xmat^T \Xmat)^{-1}\)</span>) then there is a unique solution:</p>
+<div class="math notranslate nohighlight">
+\[
+\bhat = (\Xmat^T \Xmat)^{-1} \Xmat^T \yvec
+\]</div>
+<p>It turns out that, if <span class="math notranslate nohighlight">\(\Xmat^T \Xmat\)</span> is not invertible, there are an infinite
+number of solutions, and we have to choose one solution, taking into account
+that the parameters <span class="math notranslate nohighlight">\(\bhat\)</span> will depend on which solution we chose. The
+<em>pseudoinverse</em> operator gives us one particular solution. If <span class="math notranslate nohighlight">\(\bf{A}^+\)</span> is the
+pseudoinverse of matrix <span class="math notranslate nohighlight">\(\bf{A}\)</span> then the general solution for <span class="math notranslate nohighlight">\(\bhat\)</span>, even
+when <span class="math notranslate nohighlight">\(\Xmat^T \Xmat\)</span> is not invertible, is:</p>
+<div class="math notranslate nohighlight">
+\[
+\bhat = \Xmat^+ \yvec
+\]</div>
+<p>Using this matrix algebra, what line do we estimate for <code class="docutils literal notranslate"><span class="pre">prestige</span></code>
+and <code class="docutils literal notranslate"><span class="pre">income</span></code>?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">income</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="n">X</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[76.,  1.],
+       [78.,  1.],
+       [21.,  1.],
+       [12.,  1.],
+       [16.,  1.],
+       [ 8.,  1.],
+       [34.,  1.],
+       [48.,  1.],
+       [64.,  1.],
+       [ 9.,  1.],
+       [36.,  1.],
+       [21.,  1.],
+       [72.,  1.],
+       [47.,  1.],
+       [42.,  1.]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use the pseudoinverse to get estimated B</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">npl</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">prestige</span>
+<span class="n">B</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.181791, 4.855621])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the data</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">prestige</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f61b4dc0500&gt;]
+</pre></div>
+</div>
+<img alt="_images/178197f3d88a5411eb13cd446a9144c647372899ad0a5bd67196329b89a51ba5.png" src="_images/178197f3d88a5411eb13cd446a9144c647372899ad0a5bd67196329b89a51ba5.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best_slope</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">best_intercept</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">best_predictions</span> <span class="o">=</span> <span class="n">best_intercept</span> <span class="o">+</span> <span class="n">best_slope</span> <span class="o">*</span> <span class="n">income</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the new prediction</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">prestige</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Actual data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">best_predictions</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Best predictions&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Income&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Prestige score&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Income vs Prestige with best line&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ac9ed5e633674f7077c2ccb040d7c77e1896d71e93e599e6ec305a87ca3fd62d.png" src="_images/ac9ed5e633674f7077c2ccb040d7c77e1896d71e93e599e6ec305a87ca3fd62d.png" />
+</div>
+</div>
+<p>Our claim was that this estimate for slope and intercept minimize the sum (and
+therefore mean) of squared error:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fitted</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">B</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="n">prestige</span> <span class="o">-</span> <span class="n">fitted</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">errors</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4590.079332315554
+</pre></div>
+</div>
+</div>
+</div>
+<p>Is this sum of squared errors smaller than our earlier guess of an intercept of
+10 and a slope of 0.9?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fitted</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="n">prestige</span> <span class="o">-</span> <span class="n">fitted</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">errors</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5778.959999999999
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="displaying-the-design-matrix-as-an-image">
+<h2>Displaying the design matrix as an image<a class="headerlink" href="#displaying-the-design-matrix-as-an-image" title="Link to this heading">#</a></h2>
+<p>We can show the design as an image, by scaling the values with columns.</p>
+<p>We scale within columns because we care more about seeing variation
+within the regressor than between regressors. For example, if we have a
+regressor varying between 0 and 1, and another between 0 and 1000,
+without scaling, the column with the larger numbers will swamp the
+variation in the column with the smaller numbers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">scale_design_mtx</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;utility to scale the design matrix for display</span>
+
+<span class="sd">    This scales the columns to their own range so we can see the variations</span>
+<span class="sd">    across the column for all the columns, regardless of the scaling of the</span>
+<span class="sd">    column.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mi</span><span class="p">,</span> <span class="n">ma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Vector that is True for columns where values are not</span>
+    <span class="c1"># all almost equal to each other</span>
+    <span class="n">col_neq</span> <span class="o">=</span> <span class="p">(</span><span class="n">ma</span> <span class="o">-</span> <span class="n">mi</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.e-8</span>
+    <span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="c1"># Leave columns with same value throughout with 1s</span>
+    <span class="c1"># Scale other columns to min, max in column</span>
+    <span class="n">mi</span> <span class="o">=</span> <span class="n">mi</span><span class="p">[</span><span class="n">col_neq</span><span class="p">]</span>
+    <span class="n">ma</span> <span class="o">=</span> <span class="n">ma</span><span class="p">[</span><span class="n">col_neq</span><span class="p">]</span>
+    <span class="n">Xs</span><span class="p">[:,</span><span class="n">col_neq</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="n">col_neq</span><span class="p">]</span> <span class="o">-</span> <span class="n">mi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">ma</span> <span class="o">-</span> <span class="n">mi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Xs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we can display the scaled design with a title and some default image
+display parameters, to see our design at a glance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">scale_design_mtx</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Simple regression model&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/84b28a9f5fcb1248539dc27be3ac67328f1e708233bc333f2dfbef3e870ca32c.png" src="_images/84b28a9f5fcb1248539dc27be3ac67328f1e708233bc333f2dfbef3e870ca32c.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "lisds/dsip",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="cost_functions.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Fitting models with different cost functions</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="naive_bayes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Naive Bayes classifiers</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-regression">Simple regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-regression-in-matrix-form">Simple regression in matrix form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-regression">Multiple regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#population-sample-estimate">Population, sample, estimate</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-the-model-with-matrix-algebra">Solving the model with matrix algebra</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-the-design-matrix-as-an-image">Displaying the design matrix as an image</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Matthew Brett and Peter Rush
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
