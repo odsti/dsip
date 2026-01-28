@@ -20,7 +20,9 @@ jupyter:
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-pd.set_option('mode.copy_on_write', True)
+# Enable copy_on_write for Pandas<3
+if int(pd.__version__.split('.')[0]) < 3:
+    pd.set_option('mode.copy_on_write', True)
 ```
 
 Also see: [Naive Bayes

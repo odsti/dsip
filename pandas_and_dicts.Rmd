@@ -27,7 +27,9 @@ And in fact - the idea of names mapping to values is fundamental to Pandas.
 import numpy as np
 import pandas as pd
 
-pd.set_option('mode.copy_on_write', True)
+# Enable copy_on_write for Pandas<3
+if int(pd.__version__.split('.')[0]) < 3:
+    pd.set_option('mode.copy_on_write', True)
 
 import matplotlib.pyplot as plt
 ```
