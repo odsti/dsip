@@ -1,6 +1,5 @@
 ---
 jupyter:
-  orphan: true
   jupytext:
     notebook_metadata_filter: all,-language_info
     split_at_heading: true
@@ -8,11 +7,12 @@ jupyter:
       extension: .Rmd
       format_name: rmarkdown
       format_version: '1.2'
-      jupytext_version: 1.15.2
+      jupytext_version: 1.19.1
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
     name: python3
+  orphan: true
 ---
 
 # Logistic regression
@@ -129,7 +129,7 @@ dummy-coding scheme is:
 # 'replace' replaces the values in the first argument with the corresponding
 # values in the second argument.
 hgb_app['appetite_dummy'] = hgb_app['appetite'].replace(['poor', 'good'],
-                                                        [0, 1])
+                                                        [0, 1]).astype(int)
 hgb_app.head(20)
 ```
 
@@ -1677,7 +1677,12 @@ def mll_logit_cost(intercept_and_slope, x, y):
     return -log_likelihood
 ```
 
-Use the new cost function:
+```{python}
+# Test the cost function with example values.
+mll_logit_cost([-7, 0.8], hemoglobin, appetite_d)
+```
+
+Use the new cost function with `minimize`:
 
 ```{python}
 logistic_reg_MLL = minimize(mll_logit_cost,  # Cost function
