@@ -47,4 +47,4 @@ If you want to, you can create a Jupyter Notebook to show the results of your
 data analysis script. You can use an .Rmd or .ipynb file here, as the notebook
 will only contain a few lines (see the example `showcase_notebook.ipynb`)
 
-An example repo, with some blank templates, can be found here: https://github.com/lisds/logistic_regression_exercise
+An example repo, with some blank templates, can be found here: https://github.com/odsti/logistic_regression_exercise

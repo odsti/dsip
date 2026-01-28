@@ -122,7 +122,7 @@ pip 22.0.4 from <some-directory/site-packages/pip (python 3.10)
 Next,  get a copy of all the textbook files:
 
 ```
-git clone https://github.com/lisds/dsip
+git clone https://github.com/odsti/dsip
 ```
 
 Change directory to the new textbook directory:

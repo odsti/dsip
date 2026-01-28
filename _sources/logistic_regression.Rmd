@@ -34,7 +34,7 @@ from ipywidgets import interact
 In this page we will look at another regression technique: logistic regression.
 We use logistic regression when we want to use a *binary categorical*
 variable as our *outcome* variable This contrasts with using a binary categorical 
-variable *as* a predictor variable, as we've seen on the other [textbook](https://lisds.github.io/dsip/linear_regression_categorical_predictors.html) [pages](https://lisds.github.io/dsip/multiple_predictors_statistical_adjustment.html). 
+variable *as* a predictor variable, as we've seen on the other [textbook](https://odsti.github.io/dsip/linear_regression_categorical_predictors.html) [pages](https://odsti.github.io/dsip/multiple_predictors_statistical_adjustment.html). 
 
 As we know, a binary categorical variable is one where an observation can fall
 into one of only two categories. We give each observation a label corresponding to their
@@ -49,7 +49,7 @@ category.  Some examples are:
 * Did a person with a conviction for one offense offend again ("yes" or "no")?
 
 For this tutorial, we return to the [chronic kidney disease
-dataset]( https://lisds.github.io/textbook/data/chronic_kidney_disease), which
+dataset]( https://odsti.github.io/cfd-textbook/data/chronic_kidney_disease), which
 you have seen previously.
 
 Each observational unit in this dataset is one patient.
@@ -114,7 +114,7 @@ Which we read as "we want to model `appetite` as a function of `hemoglobin`".
 We will soon find ourselves wanting to do calculations on the values in the
 `appetite` column, and we cannot easily do that with the current string values
 of "good" and "poor", for the reasons we've seen previously, on the categorical 
-predictors [page](https://lisds.github.io/dsip/linear_regression_categorical_predictors.html).
+predictors [page](https://odsti.github.io/dsip/linear_regression_categorical_predictors.html).
 
 Just as when we use a categorical variable as a predictor,
 our next step is to recode the string values to
@@ -262,20 +262,16 @@ appetite scores, based on hemoglobin concentrations?
 
 Let us start by grabbing the our familiar `ss_any_line` function from the
 [Using minimize
-page](https://lisds.github.io/textbook/mean-slopes/using_minimize).
+page](https://odsti.github.io/cfd-textbook/using_minimize).
 
 ```{python}
 def ss_any_line(intercept_and_slope, x_values, y_values):
-    
     # Intercept_and_slope is a list containing two elements, an intercept and a slope.
     intercept, slope =intercept_and_slope
-    
     # Values predicted from these x_values, using this intercept and slope.
     predicted = intercept + x_values * slope
-    
     # Difference of prediction from the actual y values.
     error = y_values - predicted
-    
     # Sum of squared error.
     return np.mean(error ** 2)
 ```
@@ -825,7 +821,7 @@ Our next step is to apply a *logarithm* transformation.
 
 ## The logarithm transform
 
-See the [logarithm refresher](https://lisds.github.io/textbook/more-regression/logarithms_refreshed) page for
+See the [logarithm refresher](https://odsti.github.io/cfd-textbook/logarithms_refreshed) page for
 more background on logarithms.
 
 For now, **the only thing you need to know about logarithms is that they are
@@ -943,7 +939,7 @@ We also want to be able to go backwards, from the straight-line predictions, to
 the sigmoid predictions.
 
 `np.exp` reverses (inverts) the `np.log` transformation (see the [logarithm
-refresher]((https://lisds.github.io/textbook/more-regression/logarithms_refreshed)
+refresher]((https://odsti.github.io/cfd-textbook/logarithms_refreshed)
 page):
 
 ```{python}
@@ -1243,7 +1239,7 @@ squares? E.g. could we use a different cost function which would work better?
 
 It turns out there is another quite different and very useful way to score the
 predictions, called *likelihood*.  For reasons we discuss in [this
-page](https://lisds.github.io/textbook/more-regression/logistic_convexity), all
+page](https://odsti.github.io/cfd-textbook/logistic_convexity), all
 standard implementations of logistic regression that we know of, use the
 *likelihood* measure that we describe below, instead of the sum of squares
 measure you see above.
@@ -1612,7 +1608,7 @@ goes up when likelihood goes up, and goes down when likelihood goes down,
 Specifically we want the value that comes back from the cost function to vary
 [monotonically](https://en.wikipedia.org/wiki/Monotonic_function) with respect
 to the likelihood.  See the discussion on monotonicity in the [Sum of squares,
-root mean square](https://lisds.github.io/textbook//mean-slopes/sse_rmse) page.
+root mean square](https://odsti.github.io/cfd-textbook/sse_rmse) page.
 
 In our case you may be able to see that the likelihood and *log likelihood* are
 monotonic with respect to each other, so if we find the parameters minimizing

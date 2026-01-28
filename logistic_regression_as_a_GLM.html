@@ -60,7 +60,7 @@
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'logistic_regression_as_a_GLM';</script>
-    <link rel="canonical" href="https://lisds.github.io/dsip/logistic_regression_as_a_GLM.html" />
+    <link rel="canonical" href="https://odsti.github.io/dsip/logistic_regression_as_a_GLM.html" />
     <link rel="icon" href="_static/dsfe_favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -275,7 +275,7 @@
       
       
       
-      <li><a href="https://mybinder.org/v2/gh/lisds/dsip/main?urlpath=lab/tree/logistic_regression_as_a_GLM.Rmd" target="_blank"
+      <li><a href="https://mybinder.org/v2/gh/odsti/dsip/main?urlpath=lab/tree/logistic_regression_as_a_GLM.Rmd" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch on Binder"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -293,7 +293,7 @@
       
       
       
-      <li><a href="https://ds.lis.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A//github.com/lisds/dsip&urlpath=lab/tree/dsip/logistic_regression_as_a_GLM.Rmd&branch=main" target="_blank"
+      <li><a href="https://ds.lis.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A//github.com/odsti/dsip&urlpath=lab/tree/dsip/logistic_regression_as_a_GLM.Rmd&branch=main" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch on JupyterHub"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -342,7 +342,7 @@
       
       
       
-      <li><a href="https://github.com/lisds/dsip" target="_blank"
+      <li><a href="https://github.com/odsti/dsip" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -359,7 +359,7 @@
       
       
       
-      <li><a href="https://github.com/lisds/dsip/edit/main/logistic_regression_as_a_GLM.Rmd" target="_blank"
+      <li><a href="https://github.com/odsti/dsip/edit/main/logistic_regression_as_a_GLM.Rmd" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -376,7 +376,7 @@
       
       
       
-      <li><a href="https://github.com/lisds/dsip/issues/new?title=Issue%20on%20page%20%2Flogistic_regression_as_a_GLM.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/odsti/dsip/issues/new?title=Issue%20on%20page%20%2Flogistic_regression_as_a_GLM.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -1281,7 +1281,9 @@ generalise poorly to new data, producing bad predictions.</p>
 </div>
 <p>From the graphical trend, it does look as though <code class="docutils literal notranslate"><span class="pre">fare</span></code> is associated with a higher probability of survival.</p>
 <p>In fact, in this sample of 25 passengers, everybody who paid above 60 survived.</p>
-<p>You’ll remember from the earlier <a class="reference external" href="https://lisds.github.io/textbook/more-regression/logistic_regression.html">Logistic Regression page</a> that the process of fitting a single predictor logistic regression goes as follows:</p>
+<p>You’ll remember from the earlier <a class="reference external" href="https://odsti.github.io/cfd-textbook/logistic_regression.html">Logistic Regression
+page</a> that the
+process of fitting a single predictor logistic regression goes as follows:</p>
 <ul class="simple">
 <li><p>we want to predict a binary categorical outcome variable (where each outcome category is dummy coded as 0 or 1)</p></li>
 <li><p>we use a slope/intercept pair to generate a line (this line applies on the scale of the log of the odds)</p></li>
@@ -1415,7 +1417,7 @@ The probability predictions are used directly in the cost function. The probabil
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.3104</td> 
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:24</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
+  <th>Time:</th>                <td>12:04:01</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td>
@@ -1624,7 +1626,7 @@ at each value of <code class="docutils literal notranslate"><span class="pre">fa
 </div>
 <p><strong>It is on this scale (between 0 and 1, the scale of the actual data) that the fit of
 a given slope/intercept pair is evaluated.</strong></p>
-<p>We went through the mechanics of this on the <a class="reference external" href="https://lisds.github.io/textbook/more-regression/logistic_regression.html">Logistic Regression page</a>, but just for some
+<p>We went through the mechanics of this on the <a class="reference external" href="https://odsti.github.io/cfd-textbook/logistic_regression.html">Logistic Regression page</a>, but just for some
 extra clarity we will go briefly through it graphically now.</p>
 <p>Because the outcome is binary, the logistic regression model implicitly fits <em>two</em> sigmoid probability curves.</p>
 <p>The one we see above is the predicted probability of survival.</p>
@@ -2022,7 +2024,7 @@ invalid value encountered in subtract
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.5089</td>  
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:27</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
+  <th>Time:</th>                <td>12:04:05</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td> 
@@ -2425,7 +2427,7 @@ goodness-of-fit to complexity (more on this later)!.</p>
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.3104</td> 
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:27</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
+  <th>Time:</th>                <td>12:04:05</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td>
@@ -2469,7 +2471,7 @@ goodness-of-fit to complexity (more on this later)!.</p>
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.5089</td>  
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:27</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
+  <th>Time:</th>                <td>12:04:05</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td> 
@@ -2523,7 +2525,7 @@ goodness-of-fit to complexity (more on this later)!.</p>
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.5089</td>  
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:27</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
+  <th>Time:</th>                <td>12:04:05</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td> 
@@ -3073,7 +3075,7 @@ The bottom right cell shows the number of <em>true positive</em> predictions - t
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.3104</td> 
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:28</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
+  <th>Time:</th>                <td>12:04:05</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td>
@@ -3219,7 +3221,7 @@ The bottom right cell shows the number of <em>true positive</em> predictions - t
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.5089</td>  
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:28</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
+  <th>Time:</th>                <td>12:04:05</td>     <th>  Log-Likelihood:    </th> <td> -8.2360</td> 
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td> 
@@ -3321,7 +3323,7 @@ dtype: float64
   <th>Date:</th>            <td>Wed, 28 Jan 2026</td> <th>  Pseudo R-squ.:     </th>  <td>0.3104</td> 
 </tr>
 <tr>
-  <th>Time:</th>                <td>11:43:28</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
+  <th>Time:</th>                <td>12:04:05</td>     <th>  Log-Likelihood:    </th> <td> -11.565</td>
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -16.771</td>
@@ -3683,7 +3685,7 @@ generalize to unseen data.</p>
     {
         requestKernel: true,
         binderOptions: {
-            repo: "lisds/dsip",
+            repo: "odsti/dsip",
             ref: "main",
         },
         codeMirrorConfig: {

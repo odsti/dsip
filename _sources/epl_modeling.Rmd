@@ -218,11 +218,14 @@ smf.ols('goal_difference ~ defense', data=df).fit().summary()
 smf.ols('goal_difference ~ forward', data=df).fit().summary()
 ```
 
-Now we are interesting in taking *both* defense and forward spending into account *at the same time*.
+Now we are interested in taking *both* defense and forward spending into
+account *at the same time*.
 
 This is *multiple* regression.
 
-Notice that in multiple regression, we calculate the fitted $\hat{\vec{y}}$ values by adding to together the components due to the first predictor, and that due to the second predictor, and the intercept.
+Notice that in multiple regression, we calculate the fitted $\hat{\vec{y}}$
+values by adding together the component due to the first predictor, and that
+due to the second predictor, and the intercept.
 
 ```{python}
 def sse_multi(params, X, y):
